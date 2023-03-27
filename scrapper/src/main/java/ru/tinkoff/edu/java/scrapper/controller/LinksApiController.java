@@ -1,48 +1,44 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
-import jakarta.validation.Valid;
-import org.openapitools.api.LinksApi;
+import jakarta.validation.constraints.NotNull;
 import org.openapitools.model.AddLinkRequest;
 import org.openapitools.model.LinkResponse;
 import org.openapitools.model.ListLinksResponse;
 import org.openapitools.model.RemoveLinkRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-
 import java.net.URI;
-import java.util.Optional;
+
 
 @RestController
 
 
-public class LinksApiController implements LinksApi {
+public class LinksApiController {
 
 
+    @GetMapping("/links")
+    public ResponseEntity<ListLinksResponse> linksGet(@NotNull Long tgChatId) {
+        //Not implemented yet
+        return ResponseEntity.ok().build();
+    }
 
-    @Override
-    public ResponseEntity<LinkResponse> linksDelete(Long tgChatId, RemoveLinkRequest removeLinkRequest) {
+    @PostMapping("/links")
+    public ResponseEntity<LinkResponse> linksPost(@NotNull Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
+        //Not implemented yet
         var response = new LinkResponse();
         response.setId(1L);
         response.setUrl(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
         return ResponseEntity.ok(response);
     }
 
-    @Override
-    public ResponseEntity<ListLinksResponse> linksGet(Long tgChatId) {
-        var response = new ListLinksResponse();
-        response.setLinks(null);
-        response.setSize(4);
-        return ResponseEntity.ok(response);
-    }
+    @DeleteMapping("/links")
 
-    @PostMapping("/links/{tgChatId}")
-    @Override
-
-    public ResponseEntity<LinkResponse> linksPost(@PathVariable("tgChatId") Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
+    public ResponseEntity<LinkResponse> linksDelete(@NotNull Long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
+        //Not implemented yet
         var response = new LinkResponse();
         response.setId(1L);
         response.setUrl(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
         return ResponseEntity.ok(response);
     }
+
 }
