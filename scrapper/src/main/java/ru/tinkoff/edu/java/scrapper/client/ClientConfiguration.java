@@ -1,48 +1,27 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.context.annotation.Bean;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 
 public class ClientConfiguration {
-    private static final String GITHUB_BASE_URL = "https://api.github.com";
-    private static final String STACK_OVERFLOW_BASE_URL = "https://api.stackexchange.com";
 
-
-    @Bean("GitHubClient")
-    public WebClient gitHubClient() {
-        return WebClient.builder()
-                .baseUrl(GITHUB_BASE_URL)
+    @Bean("gitHubClient")
+    public WebClient GitHubClient(@Value("${github.base-url}") String url) {
+        return  WebClient.builder()
+                .baseUrl(url)
                 .build();
     }
-
-    @Bean("GitHubClient")
-    public WebClient gitHubClient(String URL) {
+    @Bean("stackOverflowClient")
+    public WebClient stackOverflowClient(@Value("${stackoverflow.base-url}") String url) {
         return WebClient.builder()
-                .baseUrl(URL)
-                .build();
-    }
+                .baseUrl(url)
+                .build();}
 
-    @Bean("GitHubClient")
-    public GitHubClient githubClient(WebClient gitHubClient) {
-        return new GitHubClient(gitHubClient);
-    }
-
-    @Bean("StackOverflowClient")
-    public WebClient stackOverflowClient() {
-        return WebClient.builder()
-                .baseUrl(STACK_OVERFLOW_BASE_URL)
-                .build();
-    }
-
-    @Bean("StackOverflowClient")
-    public WebClient stackOverflowClient(String URL) {
-        return WebClient.builder()
-                .baseUrl(URL)
-                .build();
-    }
-
-    @Bean("StackOverflowClient")
-    public StackOverflowClient stackOverflowClient(WebClient stackOverflowClient) {
-        return new StackOverflowClient(stackOverflowClient);
+    @Bean
+    public long schedulerIntervalMs(ApplicationConfig config) {
+        long toMillis = config.scheduler().interval().toMillis();
+        return toMillis;
     }
 }

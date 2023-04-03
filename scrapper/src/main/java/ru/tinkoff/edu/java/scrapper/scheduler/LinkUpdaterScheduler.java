@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 
 public class LinkUpdaterScheduler {
-    @Scheduled(fixedDelayString = "#{app.scheduler.interval}")
+    @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
         Logger logger = LoggerFactory.getLogger(LinkUpdaterScheduler.class);
         logger.info("simple log!");

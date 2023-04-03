@@ -7,7 +7,6 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test) {
+public record ApplicationConfig(@NotNull String test,Scheduler scheduler) {
 
-    public static Scheduler scheduler;
 }

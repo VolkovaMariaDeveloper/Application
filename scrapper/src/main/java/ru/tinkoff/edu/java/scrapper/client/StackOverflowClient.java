@@ -1,17 +1,15 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@RequiredArgsConstructor
 public class StackOverflowClient {
-    final private WebClient webClient;
+     private final WebClient stackOverflowClient;
 
-    public StackOverflowClient(WebClient stackOverflowClient) {
-
-        this.webClient = stackOverflowClient;
-    }
 
     public StackOverflowClient fetchQuestion(long idQuestion) {
-        return webClient.get()
+        return stackOverflowClient.get()
                 .uri("/questions/{ids}", idQuestion)
                 .retrieve()
                 .bodyToMono(StackOverflowClient.class)
