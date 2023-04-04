@@ -5,3 +5,6 @@ springdoc:
     path: /swagger-ui
 server:
   port: 8080
+
+ApplicationConfig:
+  token: ${TOKEN}
