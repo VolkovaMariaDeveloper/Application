@@ -3,7 +3,7 @@ package org.linkParser.parser;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
 
-public class StackOverflowParser implements Parser{
+public class StackOverflowParser implements Parser {
     private Parser nextParser;
 
     public StackOverflowParser(Parser nextParser) {
@@ -21,6 +21,7 @@ public class StackOverflowParser implements Parser{
         }
         return null;
     }
+
     public boolean checkLinkStackOverflow(String link) {
         String d = "https://stackoverflow.com/questions/\\d*/.*";
         return link.matches(d);

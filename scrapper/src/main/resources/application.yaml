@@ -1,2 +1,16 @@
 app:
   test: 4
+  scheduler:
+    interval: 5000
+springdoc:
+  swagger-ui:
+    path: swagger-ui
+server:
+  port: 8080
+
+github:
+  base-url: https://api.github.com
+
+stackoverflow:
+  base-url: https://api.stackexchange.com/2.3
+

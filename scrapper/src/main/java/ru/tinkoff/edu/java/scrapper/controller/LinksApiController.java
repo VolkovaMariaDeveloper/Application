@@ -1,48 +1,37 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
-import jakarta.validation.Valid;
-import org.openapitools.api.LinksApi;
 import org.openapitools.model.AddLinkRequest;
 import org.openapitools.model.LinkResponse;
 import org.openapitools.model.ListLinksResponse;
 import org.openapitools.model.RemoveLinkRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-
 import java.net.URI;
-import java.util.Optional;
+
 
 @RestController
 
 
-public class LinksApiController implements LinksApi {
+public class LinksApiController {
 
 
-
-    @Override
-    public ResponseEntity<LinkResponse> linksDelete(Long tgChatId, RemoveLinkRequest removeLinkRequest) {
-        var response = new LinkResponse();
-        response.setId(1L);
-        response.setUrl(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
-        return ResponseEntity.ok(response);
+    @GetMapping("/links")
+    public ResponseEntity<ListLinksResponse> linksGet(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId) {
+        //Not implemented yet
+        return ResponseEntity.ok().build();
     }
 
-    @Override
-    public ResponseEntity<ListLinksResponse> linksGet(Long tgChatId) {
-        var response = new ListLinksResponse();
-        response.setLinks(null);
-        response.setSize(4);
-        return ResponseEntity.ok(response);
+    @PostMapping("/links")
+    public ResponseEntity<LinkResponse> linksPost(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
+        //Not implemented yet
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/links/{tgChatId}")
-    @Override
+    @DeleteMapping("/links")
 
-    public ResponseEntity<LinkResponse> linksPost(@PathVariable("tgChatId") Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
-        var response = new LinkResponse();
-        response.setId(1L);
-        response.setUrl(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
-        return ResponseEntity.ok(response);
+    public ResponseEntity<LinkResponse> linksDelete(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
+        //Not implemented yet
+        return ResponseEntity.ok().build();
     }
+
 }
