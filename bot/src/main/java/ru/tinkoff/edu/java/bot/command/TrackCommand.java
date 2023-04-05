@@ -2,8 +2,17 @@ package ru.tinkoff.edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 public class TrackCommand implements ICommand {
+    @Autowired
+    private final ScrapperClient scrapperClient;
+
+    public TrackCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
+    }
+
     @Override
     public String command() {
         return "/track";
@@ -23,7 +32,9 @@ public class TrackCommand implements ICommand {
         if(words[1]==null){
             return new SendMessage(chatId,ERROR_MESSAGE);
         }
-        return new SendMessage(chatId,String.format(description(),words[1]));
+        else{
+            scrapperClient.addLinkToTrack(String.valueOf(chatId),words[1]);
+        return new SendMessage(chatId,String.format(description(),words[1]));}
     }
 
     private String[] splitMessageIntoWords(String message) {

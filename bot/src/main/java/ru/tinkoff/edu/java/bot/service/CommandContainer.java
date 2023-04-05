@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.bot.command.*;
 
 import java.util.HashMap;
 
-import static ru.tinkoff.edu.java.bot.command.CommandName.*;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.*;
 @Service
 //@RequiredArgsConstructor
 public class CommandContainer implements ICommandContainer {
@@ -20,7 +20,7 @@ public class CommandContainer implements ICommandContainer {
         commandMap = new HashMap<>();
         commandMap.put(START.toString(), new StartCommand());
         commandMap.put(HELP.toString(), new HelpCommand());
-        commandMap.put(TRACK.toString(), new TrackCommand());
+        commandMap.put(TRACK.toString(), new TrackCommand(scrapperClient));
         commandMap.put(UNTRACK.toString(), new UntrackCommand());
         commandMap.put(LIST.toString(), new ListCommand(scrapperClient));
         unknownCommand = new UnknownCommand();

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.command;
+package ru.tinkoff.edu.java.bot.enums;
 
 public enum CommandName {
 

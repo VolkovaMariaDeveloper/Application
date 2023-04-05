@@ -29,7 +29,7 @@ public class ListCommand implements ICommand {
 
     @Override
     public String description() {
-        return "Вот ссылки, на которые вы подписаны: \n\n";
+        return "Вот ссылки, на которые вы подписаны: \n";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ListCommand implements ICommand {
         } else {
             StringBuilder linksList = new StringBuilder(description());
             for (LinkResponse link : trackedLinks) {
-                linksList.append(link.url()).append("\n\n");
+                linksList.append(link.url()).append("\n");
             }
             return new SendMessage(chatId, linksList.toString());
         }

@@ -13,7 +13,7 @@ public class UnknownCommand implements ICommand {
 
     @Override
     public String description() {
-        return "Неизвестная команда, для получания списка всех доступныхх команд введите /help";
+        return "Неизвестная команда, для получания списка всех доступных команд введите /help";
     }
 
     @Override

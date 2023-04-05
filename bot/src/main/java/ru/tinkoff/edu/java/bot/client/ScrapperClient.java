@@ -18,6 +18,7 @@ public class ScrapperClient {
 
     private final WebClient scrapperWebClient;
     private static final String CHAT_ID_HEADER = "Tg-Chat-Id";
+    private static final String URI_LINKS = "/links";
     @Autowired
     public ScrapperClient(WebClient scrapperWebClient) {
         this.scrapperWebClient = scrapperWebClient;
@@ -51,19 +52,19 @@ public class ScrapperClient {
 
     public ListLinkResponse getTrackedLinks(long chatId) {
         return scrapperWebClient.get()
-                .uri("/links")
+                .uri(URI_LINKS)
                 .header(CHAT_ID_HEADER, String.valueOf(chatId))
                 .retrieve()
                 .bodyToMono(ListLinkResponse.class)
                 .onErrorResume(throwable -> {
                     log.error("Error while getting tracked links", throwable);
-                    return Mono.just(new ListLinkResponse(Collections.emptyList(), 0));
+                    return Mono.just(new ListLinkResponse(Collections.emptyList()));
                 })
                 .block();
     }
     public boolean addLinkToTrack(String chatId, String link) {
         return Boolean.TRUE.equals(scrapperWebClient.post()
-                .uri("/links")
+                .uri(URI_LINKS)
                 .header(CHAT_ID_HEADER, chatId)
                 .bodyValue(Map.of("link", link))
                 .retrieve()
@@ -77,7 +78,7 @@ public class ScrapperClient {
     }
     public boolean removeLinkFromTrack(String chatId, String link) {
         return Boolean.TRUE.equals(scrapperWebClient.delete()
-                .uri("/links")
+                .uri(URI_LINKS)
                 .header(CHAT_ID_HEADER, chatId)
                 .retrieve()
                 .toBodilessEntity()
