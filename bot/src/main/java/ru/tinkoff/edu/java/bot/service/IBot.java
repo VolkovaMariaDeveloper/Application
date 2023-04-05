@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.model.Update;
 
 import java.util.List;
 
-public interface IBot extends AutoCloseable, UpdatesListener {
+public interface IBot extends  UpdatesListener {
    // <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(BaseRequest<T, R> request);
 
     @Override
@@ -13,6 +13,4 @@ public interface IBot extends AutoCloseable, UpdatesListener {
 
     void start();
 
-    @Override
-    void close();
 }

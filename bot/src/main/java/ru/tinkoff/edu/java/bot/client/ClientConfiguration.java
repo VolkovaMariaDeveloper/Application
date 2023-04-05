@@ -8,10 +8,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class ClientConfiguration {
 
-    @Bean
-    public ScrapperClient scrapperClient(@Value("${app.scrapper_url:http://localhost:8081}") String scrapperUrl) {
-        return new ScrapperClient(WebClient.builder()
+    @Bean("scrapperWebClient")
+    public WebClient scrapperWebClient(@Value("${scrapper.url}") String scrapperUrl) {
+        return WebClient.builder()
                 .baseUrl(scrapperUrl)
-                .build());
+                .build();
     }
 }

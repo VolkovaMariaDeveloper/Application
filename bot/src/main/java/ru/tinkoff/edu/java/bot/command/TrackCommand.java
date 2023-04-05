@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.bot.command;
 
-import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
@@ -13,14 +12,30 @@ public class TrackCommand implements ICommand {
 
     @Override
     public String description() {
-        return "Вы успешно подписались на ссылку, теперь вы будете получать уведомления об изменениях";
+        return "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
     }
 
     @Override
     public SendMessage handle(Update update) {
-        Message message = update.message();
-        long chatId = message.chat().id();
-        return new SendMessage(chatId,description());
+        String message = update.message().text();
+        long chatId = update.message().chat().id();
+        String[]words= splitMessageIntoWords(message);
+        if(words[1]==null){
+            return new SendMessage(chatId,ERROR_MESSAGE);
+        }
+        return new SendMessage(chatId,String.format(description(),words[1]));
+    }
+
+    private String[] splitMessageIntoWords(String message) {
+        if (message == null) {
+            return new String[0];
+        }
+        String[] words = message.split(" ", 2);
+        if (words.length > 1) {
+            return words;
+        } else {
+            return new String[]{words[0],null};
+        }
     }
     //добавить проверку на
     // -корректность ввода ссылки

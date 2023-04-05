@@ -1,7 +1,8 @@
 package ru.tinkoff.edu.java.bot.client;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
@@ -10,13 +11,20 @@ import java.util.Collections;
 import java.util.Map;
 
 @Log4j2
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+
+@Component
 public class ScrapperClient {
-    private final WebClient webClient;
+
+    private final WebClient scrapperWebClient;
     private static final String CHAT_ID_HEADER = "Tg-Chat-Id";
+    @Autowired
+    public ScrapperClient(WebClient scrapperWebClient) {
+        this.scrapperWebClient = scrapperWebClient;
+    }
 
     public boolean registerChat(String chatId) {
-        return Boolean.TRUE.equals(webClient.post()
+        return Boolean.TRUE.equals(scrapperWebClient.post()
                 .uri("/tg-chat/{chatId}", chatId)
                 .retrieve()
                 .toBodilessEntity()
@@ -29,7 +37,7 @@ public class ScrapperClient {
     }
 
     public boolean deleteChat(String chatId) {
-        return Boolean.TRUE.equals(webClient.delete()
+        return Boolean.TRUE.equals(scrapperWebClient.delete()
                 .uri("/tg-chat/{chatId}", chatId)
                 .retrieve()
                 .toBodilessEntity()
@@ -40,8 +48,9 @@ public class ScrapperClient {
                 })
                 .block());
     }
+
     public ListLinkResponse getTrackedLinks(long chatId) {
-        return webClient.get()
+        return scrapperWebClient.get()
                 .uri("/links")
                 .header(CHAT_ID_HEADER, String.valueOf(chatId))
                 .retrieve()
@@ -53,7 +62,7 @@ public class ScrapperClient {
                 .block();
     }
     public boolean addLinkToTrack(String chatId, String link) {
-        return Boolean.TRUE.equals(webClient.post()
+        return Boolean.TRUE.equals(scrapperWebClient.post()
                 .uri("/links")
                 .header(CHAT_ID_HEADER, chatId)
                 .bodyValue(Map.of("link", link))
@@ -67,7 +76,7 @@ public class ScrapperClient {
                 .block());
     }
     public boolean removeLinkFromTrack(String chatId, String link) {
-        return Boolean.TRUE.equals(webClient.delete()
+        return Boolean.TRUE.equals(scrapperWebClient.delete()
                 .uri("/links")
                 .header(CHAT_ID_HEADER, chatId)
                 .retrieve()

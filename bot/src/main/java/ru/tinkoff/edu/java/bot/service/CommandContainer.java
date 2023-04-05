@@ -1,50 +1,30 @@
 package ru.tinkoff.edu.java.bot.service;
 
-import com.pengrad.telegrambot.model.BotCommand;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.command.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static ru.tinkoff.edu.java.bot.command.CommandName.*;
-@RequiredArgsConstructor
-
+@Service
+//@RequiredArgsConstructor
 public class CommandContainer implements ICommandContainer {
+
     public  HashMap<String, ICommand> commandMap;
     private final ICommand unknownCommand;
-    public List<BotCommand> commandsArray = new ArrayList<>();
-    private ScrapperClient scrapperClient;
 
-
-
-    public CommandContainer() {
+    @Autowired
+    public CommandContainer(ScrapperClient scrapperClient) {
         commandMap = new HashMap<>();
-        ICommand command = new StartCommand();
-        commandsArray.add(command.toApiCommand());
-        commandMap.put(START.toString(), command);
-        command = new HelpCommand();
-        commandsArray.add(command.toApiCommand());
-        commandMap.put(HELP.toString(), command);
-        command = new TrackCommand();
-        commandsArray.add(command.toApiCommand());
-        commandMap.put(TRACK.toString(), command);
-        command = new UntrackCommand();
-        commandsArray.add(command.toApiCommand());
-        commandMap.put(UNTRACK.toString(), command);
-        command = new ListCommand(scrapperClient);
-        commandsArray.add(command.toApiCommand());
-        commandMap.put(LIST.toString(), command);
-
-
+        commandMap.put(START.toString(), new StartCommand());
+        commandMap.put(HELP.toString(), new HelpCommand());
+        commandMap.put(TRACK.toString(), new TrackCommand());
+        commandMap.put(UNTRACK.toString(), new UntrackCommand());
+        commandMap.put(LIST.toString(), new ListCommand(scrapperClient));
         unknownCommand = new UnknownCommand();
-
     }
-
-
-
 
     @Override
     public ICommand retrieveCommand(String commandIdentifier) {

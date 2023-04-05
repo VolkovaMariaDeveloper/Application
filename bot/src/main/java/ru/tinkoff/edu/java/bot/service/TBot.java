@@ -3,7 +3,9 @@ package ru.tinkoff.edu.java.bot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 import java.util.List;
 
@@ -12,16 +14,12 @@ public class TBot implements IBot {
     private final TelegramBot bot = new TelegramBot(System.getenv("TOKEN"));
     private final CommandContainer commandContainer;
 
-    public TBot() {
-        this.commandContainer = new CommandContainer();
+    @Autowired
+    public TBot(ScrapperClient scrapperClient) {
+        this.commandContainer = new CommandContainer(scrapperClient);
         //this.bot.execute(new SetMyCommands(commandContainer.commandsArray));
-
        // bot.execute(new SetMyCommands(this.commandContainer.commandMap,new BotCommandScopeDefault(),null));
     }
-
-   // @Override
-   // public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(BaseRequest<T, R> request) {
-
 
 
     @Override
@@ -38,17 +36,21 @@ public class TBot implements IBot {
 
     }
 
-    @Override
-    public void close() {
-
-    }
 
     private void process(Update update) {
         if (update.message() != null) {
             String message = update.message().text();
-            bot.execute(commandContainer.retrieveCommand(message).handle(update));
+            String[] words = splitMessageIntoWords(message);
+            bot.execute(commandContainer.retrieveCommand(words[0]).handle(update));
         }
+    }
 
-
+    private String[] splitMessageIntoWords(String message) {
+        String[] words = message.split(" ", 2);
+        if (words.length > 1) {
+            return words;
+        } else {
+            return new String[]{words[0]};
+        }
     }
 }
