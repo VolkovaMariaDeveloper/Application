@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
@@ -28,6 +27,12 @@ public class ListCommandTest {
     AutoCloseable openMock;
     @Mock
     ScrapperClient scrapperClient;
+    @Mock
+    Message message;
+    @Mock
+    Chat chat;
+    @InjectMocks
+    Update update;
     @InjectMocks
     ListCommand listCommand;
     @InjectMocks
@@ -41,18 +46,14 @@ public class ListCommandTest {
         openMock.close();
     }
 
+
     @Test
     void test_listCommands_is_empty() {
         long id = new Random().nextLong();
 
         Mockito.when(scrapperClient.getTrackedLinks(id)).thenReturn(null);
-
-        Chat chat = new Chat();
-        ReflectionTestUtils.setField(chat, "id", id);
-        Message message = new Message();
-        ReflectionTestUtils.setField(message, "chat", chat);
-        Update update = new Update();
-        ReflectionTestUtils.setField(update, "message", message);
+        when(chat.id()).thenReturn(id);
+        when(message.chat()).thenReturn(chat);
 
         ICommand result = container.retrieveCommand("/list");
         SendMessage messageFromBot = result.handle(update);
@@ -64,12 +65,8 @@ public class ListCommandTest {
     @Test
     void test_listCommands(){
         long id = new Random().nextLong();
-        Chat chat = new Chat();
-        ReflectionTestUtils.setField(chat, "id", id);
-        Message message = new Message();
-        ReflectionTestUtils.setField(message, "chat", chat);
-        Update update = new Update();
-        ReflectionTestUtils.setField(update, "message", message);
+        when(chat.id()).thenReturn(id);
+        when(message.chat()).thenReturn(chat);
 
         LinkResponse firstUrl = new LinkResponse(0, "https://github.com/VolkovaMariaDeveloper/Application/");
         ListLinkResponse listLinkResponse = new ListLinkResponse(List.of(firstUrl));

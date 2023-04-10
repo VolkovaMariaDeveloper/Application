@@ -10,18 +10,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.service.CommandContainer;
 
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
 public class UnknownCommandTest {
 
     AutoCloseable openMock;
+    @Mock
+    Message message;
+    @Mock
+    Chat chat;
+    @InjectMocks
+    Update update;
     @Mock
     ScrapperClient scrapperClient;
     @InjectMocks
@@ -38,12 +44,8 @@ public class UnknownCommandTest {
     @Test
     void test_unknown_command() {
         long id = new Random().nextLong();
-        Chat chat = new Chat();
-        ReflectionTestUtils.setField(chat, "id", id);
-        Message message = new Message();
-        ReflectionTestUtils.setField(message, "chat", chat);
-        Update update = new Update();
-        ReflectionTestUtils.setField(update, "message", message);
+        when(chat.id()).thenReturn(id);
+        when(message.chat()).thenReturn(chat);
         ICommand result = container.retrieveCommand("unknown");
         SendMessage messageFromBot = result.handle(update);
         String text = messageFromBot.getParameters().get("text").toString();
