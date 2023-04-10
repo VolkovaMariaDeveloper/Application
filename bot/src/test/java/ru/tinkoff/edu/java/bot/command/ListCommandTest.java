@@ -4,11 +4,13 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.dto.LinkResponse;
@@ -21,17 +23,30 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class ListCommandTest {
-    @Autowired
-    public CommandContainer container;
 
+public class ListCommandTest {
+    AutoCloseable openMock;
+    @Mock
+    ScrapperClient scrapperClient;
+    @InjectMocks
+    ListCommand listCommand;
+    @InjectMocks
+    CommandContainer container;
+    @BeforeEach
+    void setup() {
+        openMock = MockitoAnnotations.openMocks(this);
+    }
+    @AfterEach
+    void tearDown() throws Exception {
+        openMock.close();
+    }
 
     @Test
     void test_listCommands_is_empty() {
         long id = new Random().nextLong();
 
-        //Mockito.when(scrapperClient.getTrackedLinks(id)).thenReturn(new ListLinkResponse(new ArrayList<>()));
+        Mockito.when(scrapperClient.getTrackedLinks(id)).thenReturn(null);
+
         Chat chat = new Chat();
         ReflectionTestUtils.setField(chat, "id", id);
         Message message = new Message();
@@ -42,18 +57,10 @@ public class ListCommandTest {
         ICommand result = container.retrieveCommand("/list");
         SendMessage messageFromBot = result.handle(update);
         String text = messageFromBot.getParameters().get("text").toString();
-        //System.out.println(messageFromBot.getParameters().get("text").toString());
         assertThat(text).isEqualTo(ListCommand.ERROR_MESSAGE);
 
     }
-    ListCommand listCommand;
 
-    @Mock
-    ScrapperClient scrapperClient;
-    @BeforeEach
-    void beforeStart(){
-        listCommand = new ListCommand(scrapperClient);
-    }
     @Test
     void test_listCommands(){
         long id = new Random().nextLong();
@@ -76,5 +83,3 @@ public class ListCommandTest {
                 """);
     }
 }
-
-

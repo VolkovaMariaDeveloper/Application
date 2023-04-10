@@ -3,37 +3,46 @@ package ru.tinkoff.edu.java.bot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 import java.util.List;
 
 @Component
-public class TBot implements IBot {
+public class TBot extends TelegramLongPollingBot implements IBot {
     private final TelegramBot bot = new TelegramBot(System.getenv("TOKEN"));
-    private final CommandContainer commandContainer;
-
     @Autowired
-    public TBot(ScrapperClient scrapperClient) {
-        this.commandContainer = new CommandContainer(scrapperClient);
-        //this.bot.execute(new SetMyCommands(commandContainer.commandsArray));
-       // bot.execute(new SetMyCommands(this.commandContainer.commandMap,new BotCommandScopeDefault(),null));
-    }
+    private final CommandContainer commandContainer;
+    private final String BOT_NAME = "NewsBot";
 
+    public TBot(ScrapperClient scrapperClient){
+        super(System.getenv("TOKEN"));
+        this.commandContainer = new CommandContainer(scrapperClient);
+    }
 
     @Override
     public int process(List<Update> updates) {
         return 0;
     }
 
+    @PostConstruct
     @Override
     public void start() {
+        try {
+            this.execute(new SetMyCommands(commandContainer.listCommand, new BotCommandScopeDefault(), null));
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
         bot.setUpdatesListener(updates -> {
             updates.forEach(this::process);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
-
     }
 
 
@@ -52,5 +61,12 @@ public class TBot implements IBot {
         } else {
             return new String[]{words[0]};
         }
+    }
+    @Override
+    public void onUpdateReceived(org.telegram.telegrambots.meta.api.objects.Update update) {
+    }
+    @Override
+    public String getBotUsername() {
+        return BOT_NAME;
     }
 }

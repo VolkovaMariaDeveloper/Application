@@ -3,9 +3,11 @@ package ru.tinkoff.edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-
+@Component
 public class TrackCommand implements ICommand {
+    private final String SUCCESSFUL_MESSAGE = "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
     @Autowired
     private final ScrapperClient scrapperClient;
 
@@ -17,11 +19,11 @@ public class TrackCommand implements ICommand {
     public String command() {
         return "/track";
     }
-    public static final String ERROR_MESSAGE = "Ссылка не добавлена в список отслеживаемых ссылок, возможно вы ее уже отслеживаете.";
+    public static final String ERROR_MESSAGE = "Ссылка не добавлена в список отслеживаемых ссылок, введите ее сразу после команды /track";
 
     @Override
     public String description() {
-        return "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
+        return "начать отслживание ссылки";
     }
 
     @Override
@@ -34,7 +36,7 @@ public class TrackCommand implements ICommand {
         }
         else{
             scrapperClient.addLinkToTrack(String.valueOf(chatId),words[1]);
-        return new SendMessage(chatId,String.format(description(),words[1]));}
+        return new SendMessage(chatId,String.format(SUCCESSFUL_MESSAGE,words[1]));}
     }
 
     private String[] splitMessageIntoWords(String message) {

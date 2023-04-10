@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.bot.service;
 
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ public interface IBot extends  UpdatesListener {
     @Override
     int process(List<Update> updates);
 
-    void start();
+    void start() throws TelegramApiException;
 
 }

@@ -3,17 +3,16 @@ package ru.tinkoff.edu.java.bot.command;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HelpCommand implements ICommand {
 
     @Override
     public String command() {
         return "/help";
     }
-
-    @Override
-    public String description() {
-        return """
+    private final String HELP_MESSAGE ="""
     NewsBot поможет вам отслеживать изменения в репозиториях GitHub и вопросах на StackOverflow.
     
     Для этого необходимо ввести команду /track и ссылку, на обновления которой вы хотите подписаться.
@@ -26,6 +25,10 @@ public class HelpCommand implements ICommand {
     
     Для получения списка всех отслеживаемых ссылок введите команду /list.
     """;
+
+    @Override
+    public String description() {
+        return "получить более подробную информацию о работе с ботом";
     }
 
     @Override
@@ -33,6 +36,6 @@ public class HelpCommand implements ICommand {
         Message message = update.message();
         long chatId = message.chat().id();
         //TODO окно с доступными командами
-        return new SendMessage(chatId,description());
+        return new SendMessage(chatId,HELP_MESSAGE);
     }
 }
