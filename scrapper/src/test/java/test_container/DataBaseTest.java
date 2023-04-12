@@ -3,18 +3,15 @@ package test_container;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class DataBaseTest extends IntegrationEnvironment{
     @Test
-
     void checkTables() {
         // Arrange
         Set<String> actualTables = new HashSet<>();
@@ -34,13 +31,31 @@ public class DataBaseTest extends IntegrationEnvironment{
         }
 
         // Assert
-       // Assertions.assertTrue(actualTables.containsAll(expectedTables));
-        assertThat(actualTables.toString()).isEqualTo(expectedTables.toString());
+        Assertions.assertTrue(actualTables.containsAll(expectedTables));
     }
     @Test
     void checkDatabase_is_running() {
         Assertions.assertTrue(DB_CONTAINER.isRunning());
     }
+    @Test
+    void checkMigrations_link_open(){
+        String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
 
+        try (Connection connection = DriverManager.getConnection(
+                DB_CONTAINER.getJdbcUrl(),
+                DB_CONTAINER.getUsername(),
+                DB_CONTAINER.getPassword())) {
+
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
+
+            assertAll("Should return columns names",
+                    () ->assertThat(result.getMetaData().getColumnName(1)).isEqualTo("url"),
+                    () ->assertThat(result.getMetaData().getColumnName(2)).isEqualTo("link_id"));
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+
+    }
 
 }

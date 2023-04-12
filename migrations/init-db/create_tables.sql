@@ -10,7 +10,7 @@ CREATE table IF NOT EXISTS chat
 CREATE table IF NOT EXISTS links
 (
     url VARCHAR(255) NOT NULL,
-    linc_id INT PRIMARY KEY
+    link_id INT PRIMARY KEY
 );
 
 --changeset svytoq:create_table_chat_link
@@ -21,5 +21,5 @@ CREATE table IF NOT EXISTS chat_link
     link_id INT,
     PRIMARY KEY (chat_id, link_id),
     FOREIGN KEY (chat_id) REFERENCES chat(chat_id),
-    FOREIGN KEY (link_id) REFERENCES links(linc_id)
+    FOREIGN KEY (link_id) REFERENCES links(link_id)
 );

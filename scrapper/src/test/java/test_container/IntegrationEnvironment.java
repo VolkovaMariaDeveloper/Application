@@ -35,12 +35,13 @@ public abstract class IntegrationEnvironment {
                 .withUsername(USERNAME)
                 .withPassword(PASSWORD);
         DB_CONTAINER.start();
+        runMigration();
     }
 
-    private static void runMigrations(JdbcDatabaseContainer<?> container) {
-        var changelogPath = new File(".").toPath().toAbsolutePath().getParent()
+    private static void runMigration() {
+        var changelogPath = new File(".").toPath().toAbsolutePath().getParent().getParent()
                 .resolve(CHANGELOG_DIR);
-        try (var conn = DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword())) {
+        try (var conn = DriverManager.getConnection(DB_CONTAINER.getJdbcUrl(), DB_CONTAINER.getUsername(), DB_CONTAINER.getPassword())) {
             var changelogDir = new DirectoryResourceAccessor(changelogPath);
             var db = new PostgresDatabase();
             db.setConnection(new JdbcConnection(conn));
