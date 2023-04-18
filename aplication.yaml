@@ -1,0 +1,9 @@
+spring:
+  liquibase:
+    changeLog: "classpath: db/changelog/db-changelog-master.yaml"
+
+  datasource:
+    url:  jdbc:postgresql://localhost:5432/scrapper
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver

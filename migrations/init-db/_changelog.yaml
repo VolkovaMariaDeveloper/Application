@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Volkova
+  - include:
+      file: create_tables.sql
+      relativeToChangelogFile: true
