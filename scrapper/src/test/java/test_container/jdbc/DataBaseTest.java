@@ -1,7 +1,9 @@
-package test_container;
+package test_container.jdbc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -9,8 +11,8 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
-public class DataBaseTest extends IntegrationEnvironment{
+@SpringBootTest(classes= ScrapperApplication.class)
+public class DataBaseTest extends IntegrationEnvironment {
     @Test
     void checkTables() {
         // Arrange
@@ -51,7 +53,7 @@ public class DataBaseTest extends IntegrationEnvironment{
 
             assertAll("Should return columns names",
                     () ->assertThat(result.getMetaData().getColumnName(1)).isEqualTo("url"),
-                    () ->assertThat(result.getMetaData().getColumnName(2)).isEqualTo("link_id"));
+                    () ->assertThat(result.getMetaData().getColumnName(2)).isEqualTo("id"));
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
         }

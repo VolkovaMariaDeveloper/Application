@@ -18,7 +18,11 @@ public class ClientConfiguration {
         return WebClient.builder()
                 .baseUrl(url)
                 .build();}
-
+    @Bean("botClient")
+    public WebClient botClient(@Value("${bot.base-url}") String url) {
+        return WebClient.builder()
+                .baseUrl(url)
+                .build();}
     @Bean
     public long schedulerIntervalMs(ApplicationConfig config) {
         long toMillis = config.scheduler().interval().toMillis();
