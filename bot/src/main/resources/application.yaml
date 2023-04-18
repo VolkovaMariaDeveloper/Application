@@ -1,7 +1,14 @@
 app:
   test: 5
+
 springdoc:
   swagger-ui:
     path: /swagger-ui
 server:
-  port: 8080
+  port: 8081
+
+ApplicationConfig:
+  token: ${TOKEN}
+
+scrapper:
+  url: http://localhost:8081
