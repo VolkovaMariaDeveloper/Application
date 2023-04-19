@@ -35,7 +35,7 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
-        Collection<JdbcLinkResponse> listLinks = linkService.getAllLinks();
+        Collection<JdbcLinkResponse> listLinks = linkService.getAllUncheckedLinks();
         Collection<JdbcLinkResponse> updatedLinks = new HashSet<>();
         for (JdbcLinkResponse link : listLinks) {
             String url = link.link();
@@ -61,7 +61,7 @@ public class LinkUpdaterScheduler {
         for (JdbcLinkResponse link : updatedLinks) {
             String description = String.format("%s has a new update!", link.link());
             tgChatIds = tgChatService.getChatIdsForLink(link.link());
-            botClient.updateLink(link.id(), link.link(), description, tgChatIds);
+            botClient.updateLink(link.id(), description, link.link(), tgChatIds);
         }
     }
 }

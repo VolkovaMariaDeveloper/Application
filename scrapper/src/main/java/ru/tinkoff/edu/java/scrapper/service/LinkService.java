@@ -10,5 +10,7 @@ public interface LinkService {
     JdbcLinkResponse remove(long tgChatId, String url);
     ListLinksResponse listAll(long tgChatId);
     Collection<JdbcLinkResponse> getAllLinks();
+    Collection<JdbcLinkResponse> getAllUncheckedLinks();
+
 
 }

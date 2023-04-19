@@ -38,4 +38,9 @@ public class JdbcLinkService implements LinkService {
         List<JdbcLinkResponse> collection = linkRepository.getAllLinks();
         return collection;
     }
+    @Override
+    public Collection<JdbcLinkResponse> getAllUncheckedLinks() {
+        List<JdbcLinkResponse> collection = linkRepository.getAllUncheckedLinks();
+        return collection;
+    }
 }
