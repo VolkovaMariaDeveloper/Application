@@ -8,6 +8,7 @@ import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 @Service
 public class JdbcLinkService implements LinkService {
@@ -18,13 +19,13 @@ public class JdbcLinkService implements LinkService {
     public JdbcLinkResponse add(long tgChatId, String url) {
 
         long id = linkRepository.add(tgChatId, url);
-        return new JdbcLinkResponse(id, url, OffsetDateTime.now());
+        return new JdbcLinkResponse(id, null,url, OffsetDateTime.now());
     }
 
     @Override
     public JdbcLinkResponse remove(long tgChatId, String url) {
         long id = linkRepository.remove(tgChatId, url);
-        return new JdbcLinkResponse(id, url, OffsetDateTime.now());
+        return new JdbcLinkResponse(id,null, url, OffsetDateTime.now());
     }
 
     @Override
@@ -33,8 +34,8 @@ public class JdbcLinkService implements LinkService {
         return new ListLinksResponse(collection);
     }
     @Override
-    public ListLinksResponse getAllLinks() {
+    public Collection<JdbcLinkResponse> getAllLinks() {
         List<JdbcLinkResponse> collection = linkRepository.getAllLinks();
-        return new ListLinksResponse(collection);
+        return collection;
     }
 }

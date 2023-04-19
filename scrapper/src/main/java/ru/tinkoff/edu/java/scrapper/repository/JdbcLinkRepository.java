@@ -97,7 +97,7 @@ public class JdbcLinkRepository {
                     long id = rs.getLong("id");
                     String link = rs.getString("url");
                     OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
-                    return new JdbcLinkResponse(id, link, lastCheck_Time);
+                    return new JdbcLinkResponse(id, null, link, lastCheck_Time);
 
                 },
                 tgChatId
@@ -114,7 +114,24 @@ public class JdbcLinkRepository {
                     long id = rs.getLong("id");
                     String link = rs.getString("url");
                     OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
-                    return new JdbcLinkResponse(id, link, lastCheck_Time);
+                    return new JdbcLinkResponse(id,null, link, lastCheck_Time);
+
+                }
+        );
+    }
+    public List<JdbcLinkResponse> getAllUncheckedLinks() {
+        String linksSql = """
+                select id, url, last_check_time 
+                from links
+                where now()-last_check_time>50
+                """;
+        return jdbcTemplate.query(
+                linksSql,
+                (rs, rn) -> {
+                    long id = rs.getLong("id");
+                    String link = rs.getString("url");
+                    OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
+                    return new JdbcLinkResponse(id,null, link, lastCheck_Time);
 
                 }
         );
