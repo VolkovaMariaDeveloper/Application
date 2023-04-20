@@ -7,8 +7,10 @@ import org.linkParser.parser.LinkParser;
 import org.linkParser.result.GitHubParserResult;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
@@ -23,14 +25,22 @@ import java.util.HashSet;
 import java.util.List;
 
 @Log4j2
-@Component
+//@Component
+@EnableScheduling
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
     private final LinkService linkService;
     private final TgChatService tgChatService;
+    @Autowired
+    @Qualifier("GitHubService")
     private final GitHubClient gitHubClient;
+
+    @Autowired
+    @Qualifier("StackOverflowService")
     private final StackOverflowClient stackOverflowClient;
-    private final  BotClient botClient;
+    @Autowired
+    @Qualifier("BotService")
+    private final BotClient botClient;
     private List<Long> tgChatIds;
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")

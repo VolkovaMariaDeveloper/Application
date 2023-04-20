@@ -13,6 +13,7 @@ github:
 
 stackoverflow:
   base-url: https://api.stackexchange.com/2.3
+
 bot:
   base-url: "http://localhost:8000/api/update"
 spring:

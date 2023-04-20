@@ -1,10 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.context.annotation.Bean;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
-
+@Component
 public class ClientConfiguration {
 
     @Bean("gitHubClient")

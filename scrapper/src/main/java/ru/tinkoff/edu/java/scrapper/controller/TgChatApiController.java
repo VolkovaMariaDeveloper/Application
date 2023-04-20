@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +11,8 @@ import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcTgChatService;
 
 @RestController
 public class TgChatApiController {
-    JdbcTgChatService jdbcTgChatService = new JdbcTgChatService();
+    @Autowired
+    private JdbcTgChatService jdbcTgChatService;
     @PostMapping("/tg-chat/{id}")
     public ResponseEntity<Void> tgChatIdAdd(@PathVariable Long id) {
         jdbcTgChatService.register(id);

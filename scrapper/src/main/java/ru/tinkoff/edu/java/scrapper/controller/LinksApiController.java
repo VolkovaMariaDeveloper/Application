@@ -1,6 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
 
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
@@ -11,11 +13,11 @@ import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
 
 
 @RestController
-
+@Log4j2
 
 public class LinksApiController {
-    JdbcLinkService jdbcLinkService = new JdbcLinkService();
-
+    @Autowired
+    private JdbcLinkService jdbcLinkService;
     @GetMapping("/links")
     public ResponseEntity<ListLinksResponse> linksGetAll(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId) {
         ListLinksResponse linkResponse = jdbcLinkService.listAll(tgChatId);
@@ -24,7 +26,10 @@ public class LinksApiController {
 
     @PostMapping("/links")
     public ResponseEntity<JdbcLinkResponse> linksAdd(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
+        log.info("Adding link for chat: {}", tgChatId);
+        log.info("Request: {}", addLinkRequest);
         JdbcLinkResponse linkResponse = jdbcLinkService.add(tgChatId, addLinkRequest.link());
+        log.debug("_____________________________________________________________________________");
         return ResponseEntity.ok(linkResponse);
     }
 

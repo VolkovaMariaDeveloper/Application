@@ -1,18 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.tinkoff.edu.java.scrapper.dto.JdbcLinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +17,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
-@Repository
+@Component
 @EnableTransactionManagement
 //@RequiredArgsConstructor
 public class JdbcLinkRepository {
@@ -36,9 +31,9 @@ public class JdbcLinkRepository {
         this.transactionTemplate.setIsolationLevel(TransactionTemplate.ISOLATION_READ_COMMITTED);
     }
 
-    private final RowMapper<LinkResponse> rowMapperLinkResponse = new DataClassRowMapper<>(LinkResponse.class);
-    private final RowMapper<ListLinksResponse> rowMapperListLinksResponse = new DataClassRowMapper<>(ListLinksResponse.class);
-    @Transactional
+   // private final RowMapper<LinkResponse> rowMapperLinkResponse = new DataClassRowMapper<>(LinkResponse.class);
+   // private final RowMapper<ListLinksResponse> rowMapperListLinksResponse = new DataClassRowMapper<>(ListLinksResponse.class);
+    //@Transactional
     public long add(long tgChatId, String link) {
         Long insertId = transactionTemplate.execute(status -> {
 
@@ -88,7 +83,7 @@ public class JdbcLinkRepository {
         String linksSql = """
                 select id, url, last_check_time 
                 from links
-                join chat_link on link_id = link_id
+                join chat_link on link_id = id
                 where chat_id = ?
                 """;
         return jdbcTemplate.query(
@@ -123,7 +118,7 @@ public class JdbcLinkRepository {
         String linksSql = """
                 select id, url, last_check_time 
                 from links
-                where now()-last_check_time>50
+                where (now()-last_check_time) > (50 * '1 sec'::interval)
                 """;
         return jdbcTemplate.query(
                 linksSql,

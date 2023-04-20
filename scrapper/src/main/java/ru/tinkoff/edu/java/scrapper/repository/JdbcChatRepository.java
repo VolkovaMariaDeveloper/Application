@@ -1,34 +1,35 @@
 package ru.tinkoff.edu.java.scrapper.repository;
 
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
-
-@Repository
-
+@Log4j2
+//@Repository("chatRepository")
+@Component
 public class JdbcChatRepository {
+    @Autowired
     private final JdbcTemplate jdbcTemplate;
     JdbcChatRepository(JdbcTemplate jdbcTemplate){
       this.jdbcTemplate =  jdbcTemplate;
     }
 
     public long add(long tgChatId){ //Добавление нового пользователя
-        String sql = """
-                insert into chat(id)
-                values(?)
-                returning id
-                """;
+
+        String sql = "insert into chat(id) values(?) returning id";
         List<Long> tempId = jdbcTemplate.query(sql, (rs, rn) -> rs.getLong("id"), tgChatId);
+
        return tempId.get(0);
         }
 
     public long remove(long tgChatId){
         String linksSql = """
-                delete from chat 
-                where id = ?
+                delete from chat using chat_link
+                where id = ? and chat_id = id
                 returning id
                 """;
         try{

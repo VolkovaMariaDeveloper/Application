@@ -29,7 +29,6 @@ public class JdbcChatTest extends IntegrationEnvironment{
     @Test
     void addTest() {
         long tgChatId = 1L;
-        String link = "https://github.com/VolkovaMariaDeveloper/Application";
         jdbcChatRepository.add(tgChatId);
 
         String SQL_REQUEST_FROM_LINK = "SElECT * FROM chat";

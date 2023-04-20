@@ -128,6 +128,8 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 //            throw new RuntimeException(exception);
 //        }
     }
+
+    //аналогично без аннотаций транзакций работает как надо, с ними result.next() = false
     @Test
     @Transactional
     @Rollback
@@ -149,14 +151,42 @@ public class JdbcLinkTest extends IntegrationEnvironment {
                 DB_CONTAINER.getPassword())) {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-//        for (JdbcLinkResponse el : list) {
-//            actualLinks.add(el.link());
-
-
             while(result.next()) {
                 actualLinks.add(result.getString("url"));
             }
         assertThat(actualLinks).isEqualTo(expectedLinks);
+
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    //аналогично без аннотаций транзакций работает как надо, с ними result.next() = false
+   @Transactional
+   @Rollback
+   @Test
+    void getAllUncheckedLinksTest() {
+        long firstTgChat_id = 1L;
+        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
+        String secondLink = "https://stackoverflow.com/questions/52653836";
+        Set<String> actualLinks = new HashSet<>();
+        Set<String> expectedLinks = Set.of(firstLink, secondLink);
+        jdbcChatRepository.add(firstTgChat_id);
+        linkRepository.add(firstTgChat_id, firstLink);
+        linkRepository.add(firstTgChat_id, secondLink);
+
+        List<JdbcLinkResponse> list = linkRepository.getAllUncheckedLinks();
+        String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
+        try (Connection connection = DriverManager.getConnection(
+                DB_CONTAINER.getJdbcUrl(),
+                DB_CONTAINER.getUsername(),
+                DB_CONTAINER.getPassword())) {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
+            while(result.next()) {
+                actualLinks.add(result.getString("url"));
+            }
+            assertThat(actualLinks).isEqualTo(expectedLinks);
 
         } catch (SQLException exception) {
             throw new RuntimeException(exception);

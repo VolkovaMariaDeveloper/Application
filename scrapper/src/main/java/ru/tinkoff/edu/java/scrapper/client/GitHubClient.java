@@ -1,16 +1,20 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.tinkoff.edu.java.scrapper.dto.GitHubResponse;
-
-@RequiredArgsConstructor
+@Service("GitHubService")
+//@RequiredArgsConstructor
 public class GitHubClient {
-
+    @Autowired
+    @Qualifier("gitHubClient")
     private final WebClient gitHubClient;
 
+    public GitHubClient(WebClient gitHubClient) {
+        this.gitHubClient = gitHubClient;
+    }
 
 
     public GitHubResponse fetchRepository(String user, String repository) {
