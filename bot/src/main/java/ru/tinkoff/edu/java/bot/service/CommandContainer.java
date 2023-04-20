@@ -27,7 +27,7 @@ public class CommandContainer implements ICommandContainer {
     public CommandContainer(ScrapperClient scrapperClient) {
         commandMap = new HashMap<>();
         ICommand command;
-        commandMap.put(START.toString(), command = new StartCommand());
+        commandMap.put(START.toString(), command = new StartCommand(scrapperClient));
         listCommand.add(command.toApiCommand());
         commandMap.put(HELP.toString(), command = new HelpCommand());
         listCommand.add(command.toApiCommand());
