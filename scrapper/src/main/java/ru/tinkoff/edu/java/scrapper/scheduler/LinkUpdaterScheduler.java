@@ -18,10 +18,11 @@ import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 @Log4j2
@@ -32,27 +33,26 @@ public class LinkUpdaterScheduler {
     @Autowired
     private final LinkService linkService;
     @Autowired
+    private final LinkUpdater linkUpdater;
+    @Autowired
     private final TgChatService tgChatService;
     @Autowired
-    // @Qualifier("GitHubService")
     private final GitHubClient gitHubClient;
-
     @Autowired
-    //@Qualifier("StackOverflowService")
     private final StackOverflowClient stackOverflowClient;
     @Autowired
-    // @Qualifier("BotService")
     private final BotClient botClient;
     private List<Long> tgChatIds;
-    private final String BRANCH_ADDED = "была добавлена новая ветка";
-    private final String BRANCH_REMOVED = "количество веток уменьшилось";
+    private final String BRANCH_ADDED = "Была добавлена новая ветка";
+    private final String BRANCH_REMOVED = "Количество веток уменьшилось";
 
-    private final String ANSWER_ADDED = "появился новый ответ";
+    private final String ANSWER_ADDED = "Появился новый ответ";
+    private final String description = "Ссылка %s обновилась: %s";
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
         Collection<JdbcLinkResponse> listLinks = linkService.getAllUncheckedLinks();
-        HashMap<JdbcLinkResponse, String> updatedLinks = new HashMap<JdbcLinkResponse, String>();
+        List<LinkUpdateRequest> listUpdater = new ArrayList<>();;
 
         for (JdbcLinkResponse link : listLinks) {
             String url = link.link();
@@ -63,11 +63,13 @@ public class LinkUpdaterScheduler {
                 String repo = pair.getValue();
                 int countBranches = gitHubClient.fetchRepository(user, repo).size();
                 if (countBranches > link.count()) {
-                    updatedLinks.put(link, BRANCH_ADDED);
+                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_ADDED),tgChatIds,countBranches));
                     log.info("Link {} has a new update", url);
                 }
                 if (countBranches < link.count()) {
-                    updatedLinks.put(link, BRANCH_REMOVED);
+                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_REMOVED),tgChatIds,countBranches));
                     log.info("Link {} has a new update", url);
                 }
 
@@ -77,18 +79,18 @@ public class LinkUpdaterScheduler {
                 StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
                 int countAnswers = list[0].answer_count();
                 if (countAnswers > link.count()){
-                    updatedLinks.put(link, ANSWER_ADDED);
+                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, ANSWER_ADDED),tgChatIds,countAnswers));
                 }
 
             } else
                 log.warn("Link {} is not supported", url);
         }
-        for (JdbcLinkResponse link : updatedLinks.keySet()) {
-            log.info("Link {} has a new update", link.link());
-            String description = String.format("Ссылка %s обновилась: %s", link.link(), updatedLinks.get(link));
-            tgChatIds = tgChatService.getChatIdsForLink(link.link());
-            botClient.updateLink(new LinkUpdateRequest(link.id(), link.link(),description, tgChatIds));
-            log.info("Link {} has a new update, we inform the following chats: {} ", link.link(), tgChatIds);
+        for (LinkUpdateRequest link : listUpdater) {
+            log.info("Link {} has a new update", link.url());
+            botClient.updateLink(link);
+            log.info("Link {} has a new update, we inform the following chats: {} ", link.url(), tgChatIds);
+            linkUpdater.update(link.count(),link.url());
         }
     }
 }

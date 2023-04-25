@@ -176,4 +176,14 @@ public class JdbcLinkRepository {
         Instant instantId = rs.getTimestamp(column).toInstant();
         return OffsetDateTime.ofInstant(instantId, ZoneOffset.UTC);
     }
+    public void updateLinks(int count, String link){
+        String chat_linkSql = """
+                    update links set count = ?, last_check_time = now()
+                    where url = ?
+                    """;
+        jdbcTemplate.update(chat_linkSql, count, link);
+        jdbcTemplate.update(chat_linkSql, count, link);
+
+    }
+
 }
