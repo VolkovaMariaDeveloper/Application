@@ -1,7 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-import ru.tinkoff.edu.java.scrapper.dto.JdbcLinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 
 import java.util.Collection;
 

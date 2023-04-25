@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-import ru.tinkoff.edu.java.bot.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.dto.JdbcLinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 //@RequiredArgsConstructor
@@ -37,12 +37,12 @@ public class ListCommand implements ICommand {
         ListLinkResponse trackedLinks = scrapperClient.getTrackedLinks(chatId);
 
         //TODO вернуть список строк
-        if (trackedLinks==null) {
+        if (trackedLinks.links().isEmpty()) {
             return new SendMessage(chatId, ERROR_MESSAGE);
         } else {
             StringBuilder linksList = new StringBuilder(SUCCESSFUL_MESSAGE);
-            for (LinkResponse link : trackedLinks.links()) {
-                linksList.append(link.url()).append("\n");
+            for (JdbcLinkResponse link : trackedLinks.links()) {
+                linksList.append(link.link()).append("\n");
             }
             return new SendMessage(chatId, linksList.toString());
         }

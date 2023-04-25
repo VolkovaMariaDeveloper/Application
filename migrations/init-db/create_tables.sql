@@ -11,7 +11,9 @@ CREATE table IF NOT EXISTS links
 (
     url VARCHAR(255) NOT NULL,
     id BIGSERIAL PRIMARY KEY,
-    last_check_time timestamp
+    last_check_time timestamp,
+    branches_list VARCHAR(255),
+    count INT
 
 );
 

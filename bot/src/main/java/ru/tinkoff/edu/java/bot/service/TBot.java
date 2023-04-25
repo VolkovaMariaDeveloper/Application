@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.bot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,5 +68,8 @@ public class TBot extends TelegramLongPollingBot implements IBot {
     @Override
     public String getBotUsername() {
         return BOT_NAME;
+    }
+    public void sendMessage(SendMessage message){
+        bot.execute(message);
     }
 }

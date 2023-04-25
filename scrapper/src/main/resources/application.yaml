@@ -1,7 +1,7 @@
 app:
   test: 4
   scheduler:
-    interval: 5000
+    interval: 1500000
 springdoc:
   swagger-ui:
     path: swagger-ui
@@ -15,7 +15,7 @@ stackoverflow:
   base-url: https://api.stackexchange.com/2.3
 
 bot:
-  base-url: "http://localhost:8000/api/update"
+  base-url: "http://localhost:8081"
 spring:
   liquibase:
     changeLog: "classpath: /migrations/master.yaml"
@@ -26,3 +26,6 @@ spring:
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
+
+  main:
+    allow-circular-references: true

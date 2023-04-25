@@ -3,8 +3,8 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.dto.JdbcLinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
@@ -25,15 +25,20 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public JdbcLinkResponse add(long tgChatId, String url) {
-
+        List<JdbcLinkResponse> listLinks = linkRepository.findAll(tgChatId);
+        if(listLinks.contains(url)) {
+        return null;
+        }
         long id = linkRepository.add(tgChatId, url);
-        return new JdbcLinkResponse(id, null, url, OffsetDateTime.now());
+        int count = linkRepository.fillCount(url);
+        return new JdbcLinkResponse(id, null, url, OffsetDateTime.now(),count);
     }
 
     @Override
     public JdbcLinkResponse remove(long tgChatId, String url) {
         long id = linkRepository.remove(tgChatId, url);
-        return new JdbcLinkResponse(id, null, url, OffsetDateTime.now());
+        int count = linkRepository.fillCount(url);
+        return new JdbcLinkResponse(id, null, url, OffsetDateTime.now(), count);
     }
 
     @Override

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class GithubLinkParserTest {
     @Test
     public void parse_correctly_link() {
-        String link = "https://github.com/VolkovaMariaDeveloper/Application/";
+        String link = "https://github.com/VolkovaMariaDeveloper/Application";
 
         GitHubParserResult gitHubResult = new GitHubParserResult(new Pair<>("VolkovaMariaDeveloper", "Application"));
         ParserResult request = LinkParser.parseLink(link);

@@ -5,10 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.JdbcLinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
 
 
@@ -29,7 +29,6 @@ public class LinksApiController {
         log.info("Adding link for chat: {}", tgChatId);
         log.info("Request: {}", addLinkRequest);
         JdbcLinkResponse linkResponse = jdbcLinkService.add(tgChatId, addLinkRequest.link());
-        log.debug("_____________________________________________________________________________");
         return ResponseEntity.ok(linkResponse);
     }
 

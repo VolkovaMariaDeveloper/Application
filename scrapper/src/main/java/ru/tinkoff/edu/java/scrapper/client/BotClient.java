@@ -1,26 +1,24 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.tinkoff.edu.java.scrapper.dto.LinkUpdateRequest;
+import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 
-import java.util.List;
-//@Service//("BotService")
-//@RequiredArgsConstructor
+@Service("BotService")
+@RequiredArgsConstructor
 public class BotClient {
-    @Qualifier("botClient")
     @Autowired
+    @Qualifier("botWebClient")
     private final WebClient botWebClient;
 
-    public BotClient(WebClient botWebClient) {
-        this.botWebClient = botWebClient;
-    }
-
-    public void updateLink(Long id, String url, String description, List<Long> tgChatIds) {
+    public void updateLink(LinkUpdateRequest linkUpdateRequest) {
         botWebClient.post()
                 .uri("/updates")
-                .bodyValue(new LinkUpdateRequest(id, url, description, tgChatIds))
+                .body(BodyInserters.fromValue(linkUpdateRequest))
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

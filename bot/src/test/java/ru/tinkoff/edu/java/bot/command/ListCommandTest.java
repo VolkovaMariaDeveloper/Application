@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-import ru.tinkoff.edu.java.bot.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.dto.JdbcLinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 import ru.tinkoff.edu.java.bot.service.CommandContainer;
 
@@ -68,7 +68,7 @@ public class ListCommandTest {
         when(chat.id()).thenReturn(id);
         when(message.chat()).thenReturn(chat);
 
-        LinkResponse firstUrl = new LinkResponse(0, "https://github.com/VolkovaMariaDeveloper/Application/");
+        JdbcLinkResponse firstUrl = new JdbcLinkResponse(0, null,"https://github.com/VolkovaMariaDeveloper/Application/",null);
         ListLinkResponse listLinkResponse = new ListLinkResponse(List.of(firstUrl));
 
         when(scrapperClient.getTrackedLinks(id)).thenReturn(listLinkResponse);

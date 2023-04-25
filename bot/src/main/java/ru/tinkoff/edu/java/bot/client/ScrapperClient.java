@@ -2,17 +2,17 @@ package ru.tinkoff.edu.java.bot.client;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import ru.tinkoff.edu.java.bot.dto.JdbcLinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 import java.util.Collections;
 import java.util.Map;
 
 @Log4j2
-//@RequiredArgsConstructor
-
 @Component
 public class ScrapperClient {
 
@@ -38,7 +38,7 @@ public class ScrapperClient {
     }
 
     public boolean deleteChat(String chatId) {
-        return Boolean.TRUE.equals(scrapperWebClient.delete()
+        return Boolean.TRUE.equals(scrapperWebClient.method(HttpMethod.DELETE)
                 .uri("/tg-chat/{chatId}", chatId)
                 .retrieve()
                 .toBodilessEntity()
@@ -76,18 +76,18 @@ public class ScrapperClient {
                 })
                 .block());
     }
-    public boolean removeLinkFromTrack(String chatId, String link) {
-        return Boolean.TRUE.equals(scrapperWebClient.delete()
+    public JdbcLinkResponse removeLinkFromTrack(String chatId, String link) {
+        return scrapperWebClient.method(HttpMethod.DELETE)
                 .uri(URI_LINKS)
                 .header(CHAT_ID_HEADER, chatId)
+                .bodyValue(Map.of("link", link))
                 .retrieve()
-                .toBodilessEntity()
-                .map(response -> response.getStatusCode().is2xxSuccessful())
+                .bodyToMono(JdbcLinkResponse.class)
                 .onErrorResume(throwable -> {
-                    log.error("Error while removing link", throwable);
-                    return Mono.just(false);
+                    log.error("Error while getting tracked links", throwable);
+                    return Mono.just(null);
                 })
-                .block());
+                .block();
     }
 
 }
