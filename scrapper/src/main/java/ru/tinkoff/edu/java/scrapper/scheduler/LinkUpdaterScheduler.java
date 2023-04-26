@@ -15,7 +15,7 @@ import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
-import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
@@ -51,10 +51,10 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
-        Collection<JdbcLinkResponse> listLinks = linkService.getAllUncheckedLinks();
+        Collection<LinkResponse> listLinks = linkService.getAllUncheckedLinks();
         List<LinkUpdateRequest> listUpdater = new ArrayList<>();;
 
-        for (JdbcLinkResponse link : listLinks) {
+        for (LinkResponse link : listLinks) {
             String url = link.link();
             ParserResult result = LinkParser.parseLink(url);
             if (result instanceof GitHubParserResult) {

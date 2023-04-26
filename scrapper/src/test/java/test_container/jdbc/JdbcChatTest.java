@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
-import ru.tinkoff.edu.java.scrapper.repository.JdbcChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 
 import java.sql.*;
 import java.util.List;

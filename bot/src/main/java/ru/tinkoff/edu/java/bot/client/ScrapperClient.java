@@ -6,7 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.bot.dto.JdbcLinkResponse;
+import ru.tinkoff.edu.java.bot.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 import java.util.Collections;
@@ -76,13 +76,13 @@ public class ScrapperClient {
                 })
                 .block());
     }
-    public JdbcLinkResponse removeLinkFromTrack(String chatId, String link) {
+    public LinkResponse removeLinkFromTrack(String chatId, String link) {
         return scrapperWebClient.method(HttpMethod.DELETE)
                 .uri(URI_LINKS)
                 .header(CHAT_ID_HEADER, chatId)
                 .bodyValue(Map.of("link", link))
                 .retrieve()
-                .bodyToMono(JdbcLinkResponse.class)
+                .bodyToMono(LinkResponse.class)
                 .onErrorResume(throwable -> {
                     log.error("Error while getting tracked links", throwable);
                     return Mono.just(null);

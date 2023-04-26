@@ -4,33 +4,20 @@
 package ru.tinkoff.edu.java.scrapper.domain.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-
-import javax.annotation.processing.Generated;
-
 import org.jetbrains.annotations.NotNull;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function2;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row2;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
 import ru.tinkoff.edu.java.scrapper.domain.jooq.DefaultSchema;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.Keys;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatLinkRecord;
+
+import javax.annotation.processing.Generated;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 
 /**
@@ -65,12 +52,12 @@ public class ChatLink extends TableImpl<ChatLinkRecord> {
     /**
      * The column <code>CHAT_LINK.CHAT_ID</code>.
      */
-    public final TableField<ChatLinkRecord, Integer> CHAT_ID = createField(DSL.name("CHAT_ID"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ChatLinkRecord, Long> CHAT_ID = createField(DSL.name("CHAT_ID"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>CHAT_LINK.LINK_ID</code>.
      */
-    public final TableField<ChatLinkRecord, Integer> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ChatLinkRecord, Long> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.BIGINT.nullable(false), this, "");
 
     private ChatLink(Name alias, Table<ChatLinkRecord> aliased) {
         this(alias, aliased, null);
@@ -197,14 +184,14 @@ public class ChatLink extends TableImpl<ChatLinkRecord> {
 
     @Override
     @NotNull
-    public Row2<Integer, Integer> fieldsRow() {
+    public Row2<Long, Long> fieldsRow() {
         return (Row2) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -212,7 +199,7 @@ public class ChatLink extends TableImpl<ChatLinkRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

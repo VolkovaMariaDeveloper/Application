@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
@@ -25,17 +25,17 @@ public class LinksApiController {
     }
 
     @PostMapping("/links")
-    public ResponseEntity<JdbcLinkResponse> linksAdd(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
+    public ResponseEntity<LinkResponse> linksAdd(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
         log.info("Adding link for chat: {}", tgChatId);
         log.info("Request: {}", addLinkRequest);
-        JdbcLinkResponse linkResponse = jdbcLinkService.add(tgChatId, addLinkRequest.link());
+        LinkResponse linkResponse = jdbcLinkService.add(tgChatId, addLinkRequest.link());
         return ResponseEntity.ok(linkResponse);
     }
 
     @DeleteMapping("/links")
 
-    public ResponseEntity<JdbcLinkResponse> linksDelete(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
-        JdbcLinkResponse linkResponse = jdbcLinkService.remove(tgChatId, removeLinkRequest.link());
+    public ResponseEntity<LinkResponse> linksDelete(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
+        LinkResponse linkResponse = jdbcLinkService.remove(tgChatId, removeLinkRequest.link());
         return ResponseEntity.ok(linkResponse);
     }
 

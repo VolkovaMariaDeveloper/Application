@@ -34,7 +34,6 @@ public class Links implements Serializable {
     private String url;
     private Long id;
     private LocalDateTime lastCheckTime;
-    private String branchesList;
     private Integer count;
 
     public Links() {}
@@ -43,22 +42,19 @@ public class Links implements Serializable {
         this.url = value.url;
         this.id = value.id;
         this.lastCheckTime = value.lastCheckTime;
-        this.branchesList = value.branchesList;
         this.count = value.count;
     }
 
-    @ConstructorProperties({ "url", "id", "lastCheckTime", "branchesList", "count" })
+    @ConstructorProperties({ "url", "id", "lastCheckTime", "count" })
     public Links(
         @NotNull String url,
         @NotNull Long id,
         @Nullable LocalDateTime lastCheckTime,
-        @Nullable String branchesList,
         @Nullable Integer count
     ) {
         this.url = url;
         this.id = id;
         this.lastCheckTime = lastCheckTime;
-        this.branchesList = branchesList;
         this.count = count;
     }
 
@@ -110,22 +106,6 @@ public class Links implements Serializable {
     }
 
     /**
-     * Getter for <code>LINKS.BRANCHES_LIST</code>.
-     */
-    @Size(max = 255)
-    @Nullable
-    public String getBranchesList() {
-        return this.branchesList;
-    }
-
-    /**
-     * Setter for <code>LINKS.BRANCHES_LIST</code>.
-     */
-    public void setBranchesList(@Nullable String branchesList) {
-        this.branchesList = branchesList;
-    }
-
-    /**
      * Getter for <code>LINKS.COUNT</code>.
      */
     @Nullable
@@ -167,12 +147,6 @@ public class Links implements Serializable {
         }
         else if (!this.lastCheckTime.equals(other.lastCheckTime))
             return false;
-        if (this.branchesList == null) {
-            if (other.branchesList != null)
-                return false;
-        }
-        else if (!this.branchesList.equals(other.branchesList))
-            return false;
         if (this.count == null) {
             if (other.count != null)
                 return false;
@@ -189,7 +163,6 @@ public class Links implements Serializable {
         result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.lastCheckTime == null) ? 0 : this.lastCheckTime.hashCode());
-        result = prime * result + ((this.branchesList == null) ? 0 : this.branchesList.hashCode());
         result = prime * result + ((this.count == null) ? 0 : this.count.hashCode());
         return result;
     }
@@ -201,7 +174,6 @@ public class Links implements Serializable {
         sb.append(url);
         sb.append(", ").append(id);
         sb.append(", ").append(lastCheckTime);
-        sb.append(", ").append(branchesList);
         sb.append(", ").append(count);
 
         sb.append(")");

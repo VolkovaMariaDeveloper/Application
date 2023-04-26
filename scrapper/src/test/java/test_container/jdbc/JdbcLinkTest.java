@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
-import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
-import ru.tinkoff.edu.java.scrapper.repository.JdbcChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -107,7 +107,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         linkRepository.add(firstTgChat_id, firstLink);
         linkRepository.add(firstTgChat_id, secondLink);
 
-        List<JdbcLinkResponse> list = linkRepository.findAll(firstTgChat_id);
+        List<LinkResponse> list = linkRepository.findAll(firstTgChat_id);
         //       String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
 //        try (Connection connection = DriverManager.getConnection(
 //                DB_CONTAINER.getJdbcUrl(),
@@ -115,7 +115,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 //                DB_CONTAINER.getPassword())) {
 //            Statement statement = connection.createStatement();
 //            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-        for (JdbcLinkResponse el : list) {
+        for (LinkResponse el : list) {
             actualLinks.add(el.link());
         }
 
@@ -143,7 +143,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         linkRepository.add(firstTgChat_id, firstLink);
         linkRepository.add(firstTgChat_id, secondLink);
 
-        List<JdbcLinkResponse> list = linkRepository.getAllLinks();
+        List<LinkResponse> list = linkRepository.getAllLinks();
                String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
         try (Connection connection = DriverManager.getConnection(
                 DB_CONTAINER.getJdbcUrl(),
@@ -175,7 +175,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         linkRepository.add(firstTgChat_id, firstLink);
         linkRepository.add(firstTgChat_id, secondLink);
 
-        List<JdbcLinkResponse> list = linkRepository.getAllUncheckedLinks();
+        List<LinkResponse> list = linkRepository.getAllUncheckedLinks();
         String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
         try (Connection connection = DriverManager.getConnection(
                 DB_CONTAINER.getJdbcUrl(),

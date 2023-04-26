@@ -1,19 +1,19 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
+
 @Service
 @RequiredArgsConstructor
-public class JdbcLinkUpdater implements LinkUpdater {
+public class JooqLinkUpdater implements LinkUpdater {
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private JooqLinkRepository jooqRepository;
     @Override
     public int update(int count, String link) {
-        linkRepository.updateLinks(count, link);
-
+        jooqRepository.updateLinks(count, link);
         return 0;
     }
 }

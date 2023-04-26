@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-import ru.tinkoff.edu.java.bot.dto.JdbcLinkResponse;
+import ru.tinkoff.edu.java.bot.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 @Component
@@ -41,7 +41,7 @@ public class UntrackCommand implements ICommand {
             return new SendMessage(chatId, ERROR_REQUEST_MESSAGE);
         } else {
             ListLinkResponse listLinks = scrapperClient.getTrackedLinks(chatId);
-            for (JdbcLinkResponse link : listLinks.links()) {
+            for (LinkResponse link : listLinks.links()) {
                 if (link.link().equals(words[1])) {
 
                     scrapperClient.removeLinkFromTrack(String.valueOf(chatId), words[1]);

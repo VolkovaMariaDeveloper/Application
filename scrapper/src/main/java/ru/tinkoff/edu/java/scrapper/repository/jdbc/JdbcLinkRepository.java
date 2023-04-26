@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.repository;
+package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import javafx.util.Pair;
 import org.linkParser.parser.LinkParser;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.dto.response.JdbcLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
@@ -113,7 +113,8 @@ public class JdbcLinkRepository {
         }
     }
 
-    public List<JdbcLinkResponse> findAll(long tgChatId) {
+    //все отслеживаемые ссылки чата
+    public List<LinkResponse> findAll(long tgChatId) {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
@@ -127,14 +128,15 @@ public class JdbcLinkRepository {
                     String link = rs.getString("url");
                     OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
                     int count = rs.getInt("count");
-                    return new JdbcLinkResponse(id, null, link, lastCheck_Time, count);
+                    return new LinkResponse(id, null, link, lastCheck_Time, count);
 
                 },
                 tgChatId
         );
     }
 
-    public List<JdbcLinkResponse> getAllLinks() {
+    //Все сохраненные ссылки
+    public List<LinkResponse> getAllLinks() {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
@@ -146,13 +148,14 @@ public class JdbcLinkRepository {
                     String link = rs.getString("url");
                     OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
                     int count = rs.getInt("count");
-                    return new JdbcLinkResponse(id, null, link, lastCheck_Time, count);
+                    return new LinkResponse(id, null, link, lastCheck_Time, count);
 
                 }
         );
     }
 
-    public List<JdbcLinkResponse> getAllUncheckedLinks() {
+    //Давно не проверяемые ссылки
+    public List<LinkResponse> getAllUncheckedLinks() {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
@@ -165,7 +168,7 @@ public class JdbcLinkRepository {
                     String link = rs.getString("url");
                     OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
                     int count = rs.getInt("count");
-                    return new JdbcLinkResponse(id, null, link, lastCheck_Time, count);
+                    return new LinkResponse(id, null, link, lastCheck_Time, count);
 
                 }
         );
