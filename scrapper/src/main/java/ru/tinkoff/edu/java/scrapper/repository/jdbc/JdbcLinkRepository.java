@@ -179,7 +179,7 @@ public class JdbcLinkRepository {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
-                where (now()-last_check_time) > (50 * '1 sec'::interval)
+                where (now()-last_check_time) > (2 * '1 HOUR'::interval)
                 """;
         return jdbcTemplate.query(
                 linksSql,
