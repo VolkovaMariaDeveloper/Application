@@ -6,7 +6,7 @@ import org.linkParser.result.GitHubParserResult;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
+@Primary
 @EnableTransactionManagement
 //@RequiredArgsConstructor
 public class JdbcLinkRepository {
@@ -61,6 +62,7 @@ public class JdbcLinkRepository {
             String linksSql = """
                     insert into links(url, last_check_time, count)
                     values(?, now(), ?)
+                    on conflict (url) do nothing
                     returning id 
                     """;
             String chat_linkSql = """
@@ -68,7 +70,7 @@ public class JdbcLinkRepository {
                     values(?,?)
                     on conflict do nothing
                     """;
-            String idSql = "select id from link where url=?";
+            String idSql = "select id from links where url=?";
             int count = fillCount(link);
             List<Long> tempId = jdbcTemplate.query(linksSql, (rs, rn) -> rs.getLong("id"), link, count);
             Long id;
@@ -105,12 +107,30 @@ public class JdbcLinkRepository {
                 where id = link_id and chat_id = ? and url = ?
                 returning id
                 """;
-        try {
-            long id = jdbcTemplate.queryForObject(chat_linkSql, Long.class, tgChatId, link);
-            return Objects.requireNonNull(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException(e);//какое исключение должно быть? создать новое?
+        //удаление неотслеживаемой ссылки из таблицы всех ссылок
+        String linksSql = """
+                delete from links
+                where id = ?
+                """;
+
+        long id = jdbcTemplate.queryForObject(chat_linkSql, Long.class, tgChatId, link);
+        if(getFollowers(id)==0){
+            jdbcTemplate.update(linksSql, id);
         }
+        return Objects.requireNonNull(id);
+
+
+    }
+
+    public long getFollowers(long linkId) {
+        String chat_linkSql = """
+                select count (*)
+                from chat_link
+                where link_id = ?
+                """;
+        long countFollowers = jdbcTemplate.queryForObject(chat_linkSql, Long.class, linkId);
+        return Objects.requireNonNull(countFollowers);
+
     }
 
     //все отслеживаемые ссылки чата
@@ -179,11 +199,12 @@ public class JdbcLinkRepository {
         Instant instantId = rs.getTimestamp(column).toInstant();
         return OffsetDateTime.ofInstant(instantId, ZoneOffset.UTC);
     }
-    public void updateLinks(int count, String link){
+
+    public void updateLinks(int count, String link) {
         String chat_linkSql = """
-                    update links set count = ?, last_check_time = now()
-                    where url = ?
-                    """;
+                update links set count = ?, last_check_time = now()
+                where url = ?
+                """;
         jdbcTemplate.update(chat_linkSql, count, link);
         jdbcTemplate.update(chat_linkSql, count, link);
 

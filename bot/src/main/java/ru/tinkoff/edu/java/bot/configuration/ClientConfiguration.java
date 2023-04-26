@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.client;
+package ru.tinkoff.edu.java.bot.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

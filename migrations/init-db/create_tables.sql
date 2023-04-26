@@ -12,7 +12,8 @@ create table IF NOT EXISTS links
     url VARCHAR(255) NOT NULL,
     id BIGSERIAL PRIMARY KEY,
     last_check_time timestamp,
-    count INT
+    count INT,
+    UNIQUE (url)
 
 );
 

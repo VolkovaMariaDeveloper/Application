@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Log4j2
 //@Repository("chatRepository")
 @Component
+@Primary
 public class JdbcChatRepository {
     @Autowired
     private final JdbcTemplate jdbcTemplate;
@@ -30,17 +32,15 @@ public class JdbcChatRepository {
         String linksSql = """
                 delete from chat using chat_link
                 where id = ? and chat_id = id
-                returning id
                 """;
-        jdbcTemplate.queryForObject(linksSql, Long.class, tgChatId);
+        jdbcTemplate.update(linksSql, tgChatId);
     }
 
     public List<Long> findAll(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
         String sql = """
                 select chat_id from chat_link
                 join links on id = link_id 
-                where url = ?
-                                
+                where url = ?              
                 """;
         return jdbcTemplate.query(
                 sql,

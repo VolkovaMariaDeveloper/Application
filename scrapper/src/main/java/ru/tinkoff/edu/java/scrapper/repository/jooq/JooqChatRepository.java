@@ -2,11 +2,12 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.*;
-
+@Component
 @RequiredArgsConstructor
 public class JooqChatRepository {
     private final DSLContext context;

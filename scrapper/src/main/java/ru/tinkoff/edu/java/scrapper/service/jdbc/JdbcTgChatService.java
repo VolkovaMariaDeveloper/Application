@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
@@ -8,6 +9,7 @@ import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 import java.util.List;
 
 @Service
+@Primary
 public class JdbcTgChatService implements TgChatService {
     @Autowired
     private JdbcChatRepository jdbcChatRepository;

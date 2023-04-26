@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Primary
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
 

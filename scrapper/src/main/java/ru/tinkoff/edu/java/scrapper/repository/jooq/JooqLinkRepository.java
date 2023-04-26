@@ -8,6 +8,7 @@ import org.linkParser.result.GitHubParserResult;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
@@ -21,7 +22,7 @@ import java.util.Objects;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.CHAT_LINK;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.LINKS;
-
+@Component
 @RequiredArgsConstructor
 public class JooqLinkRepository {
     private final DSLContext context;
