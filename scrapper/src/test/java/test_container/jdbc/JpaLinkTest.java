@@ -109,4 +109,5 @@ public class JpaLinkTest extends IntegrationEnvironment {
         expectedResponse.links().add(new LinkResponse(tgChatId, null, url + "3", time, count));
         assertThat(response).isEqualTo(expectedResponse);
     }
+
 }

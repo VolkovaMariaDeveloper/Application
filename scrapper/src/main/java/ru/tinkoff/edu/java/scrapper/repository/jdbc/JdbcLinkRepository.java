@@ -188,7 +188,6 @@ public class JdbcLinkRepository {
                 where url = ?
                 """;
         jdbcTemplate.update(chat_linkSql, count, link);
-        jdbcTemplate.update(chat_linkSql, count, link);
 
     }
 

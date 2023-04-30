@@ -31,16 +31,28 @@ public class JpaLinkService implements LinkService {
     @Transactional
     @Override
     public LinkResponse add(long tgChatId, String url) {
-        Links link = new Links();
-        int count = checkUpdater.fillCount(url);
+        List<Links> listAllLinks = jpaLinkRepository.findAll();
+        Links link;
+        boolean exist = false;
+        for (Links checkedLink:listAllLinks){
+            if(checkedLink.getUrl().equals(url)){
+                exist = true;
+                break;
+            }
+        }
+        if(!exist) {
+            link = new Links();
+            int count = checkUpdater.fillCount(url);
 
-        link.setUrl(url);
-        link.setCount(count);
+            link.setUrl(url);
+            link.setCount(count);
+            link.setSubscribers(new HashSet<>());
+        }
+        else{
+            link = jpaLinkRepository.findByUrl(url);
+        }
+        Chat chat = jpaChatRepository.findById(tgChatId).orElseThrow();
 
-        Optional<Chat> chatOp;
-        chatOp = jpaChatRepository.findById(tgChatId);
-        Chat chat = chatOp.orElseThrow();
-        link.setSubscribers(new HashSet<>());
         link.getSubscribers().add(chat);
         chat.getTrackedLinks().add(link);
 
@@ -49,18 +61,19 @@ public class JpaLinkService implements LinkService {
         return FromLinksToLinkResponse.map(link);
     }
 
-
+    @Transactional
     @Override
     public LinkResponse remove(long tgChatId, String url) {
         Links link = jpaLinkRepository.findByUrl(url);
         Chat chat = jpaChatRepository.findById(tgChatId).orElse(null);
+        assert chat != null;
         Set<Links> trackedLinks = chat.getTrackedLinks();
 
         trackedLinks.remove(link);
         jpaChatRepository.saveAndFlush(chat);
         return FromLinksToLinkResponse.map(link);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public ListLinksResponse findAllByChatId(long tgChatId) {
         Chat chat = jpaChatRepository.findById(tgChatId).get();
@@ -69,13 +82,14 @@ public class JpaLinkService implements LinkService {
         return FromLinksToLinkResponse.mapList(links);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllLinks() {
         List<Links> links = jpaLinkRepository.findAll();
         return FromLinksToLinkResponse.mapList(links);
 
     }
-
+    @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
         return null;
