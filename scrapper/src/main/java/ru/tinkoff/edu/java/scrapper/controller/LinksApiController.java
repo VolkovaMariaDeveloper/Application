@@ -20,7 +20,7 @@ public class LinksApiController {
     private JdbcLinkService jdbcLinkService;
     @GetMapping("/links")
     public ResponseEntity<ListLinksResponse> linksGetAll(@RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId) {
-        ListLinksResponse linkResponse = jdbcLinkService.listAll(tgChatId);
+        ListLinksResponse linkResponse = jdbcLinkService.findAllByChatId(tgChatId);
         return ResponseEntity.ok(linkResponse);
     }
 

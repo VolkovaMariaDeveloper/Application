@@ -1,19 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.repository.jooq;
 
-import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.linkParser.parser.LinkParser;
-import org.linkParser.result.GitHubParserResult;
-import org.linkParser.result.ParserResult;
-import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -34,9 +28,8 @@ public class JooqLinkRepository {
     private final StackOverflowClient stackOverflowClient;
 
     @Transactional
-    public long add(long tgChatId, String link) {
+    public long add(long tgChatId, String link, int count) {
         LocalDateTime now = OffsetDateTime.now().toLocalDateTime();
-        int count = fillCount(link);
 
         Long id = context.insertInto(LINKS)
                 .columns(LINKS.URL, LINKS.LAST_CHECK_TIME, LINKS.COUNT)
@@ -60,20 +53,20 @@ public class JooqLinkRepository {
         return id;
     }
 
-    public int fillCount(String url) {
-        ParserResult result = LinkParser.parseLink(url);
-        if (result instanceof GitHubParserResult) {
-            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
-            String user = pair.getKey();
-            String repo = pair.getValue();
-            return gitHubClient.fetchRepository(user, repo).size();
-        } else if (result instanceof StackOverflowParserResult) {
-            String questionId = ((StackOverflowParserResult) result).idQuestion;
-            long id = Long.parseLong(questionId);
-            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-            return list[0].answer_count();
-        } else return -1;
-    }
+//    public int fillCount(String url) {
+//        ParserResult result = LinkParser.parseLink(url);
+//        if (result instanceof GitHubParserResult) {
+//            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
+//            String user = pair.getKey();
+//            String repo = pair.getValue();
+//            return gitHubClient.fetchRepository(user, repo).size();
+//        } else if (result instanceof StackOverflowParserResult) {
+//            String questionId = ((StackOverflowParserResult) result).idQuestion;
+//            long id = Long.parseLong(questionId);
+//            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
+//            return list[0].answer_count();
+//        } else return -1;
+//    }
 
     public long remove(long tgChatId, String link) {
         return context.deleteFrom(CHAT_LINK).using(LINKS)

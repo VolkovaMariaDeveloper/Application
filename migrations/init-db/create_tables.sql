@@ -3,7 +3,7 @@
 --changeset Volkova:create_table_chat
 create table IF NOT EXISTS chat
 (
-    id BIGSERIAL PRIMARY KEY
+    id BIGINT PRIMARY KEY
 );
 
 --changeset Volkova:create_table_links

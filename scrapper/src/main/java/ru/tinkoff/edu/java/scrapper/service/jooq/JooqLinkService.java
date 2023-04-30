@@ -6,45 +6,48 @@ import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     @Autowired
+    private CheckUpdater checkUpdater;
+    @Autowired
     JooqLinkRepository jooqLinkRepository;
     @Override
     public LinkResponse add(long tgChatId, String url) {
-        long id = jooqLinkRepository.add(tgChatId, url);
-        int count = jooqLinkRepository.fillCount(url);
+        int count = checkUpdater.fillCount(url);
+        long id = jooqLinkRepository.add(tgChatId, url, count);
         return new LinkResponse(id, null, url, OffsetDateTime.now(),count);
     }
 
     @Override
     public LinkResponse remove(long tgChatId, String url) {
+        int count = checkUpdater.fillCount(url);
         long id = jooqLinkRepository.remove(tgChatId, url);
-        int count = jooqLinkRepository.fillCount(url);
+
         return new LinkResponse(id, null, url, OffsetDateTime.now(), count);
     }
 
     @Override
-    public ListLinksResponse listAll(long tgChatId) {
+    public ListLinksResponse findAllByChatId(long tgChatId) {
         List<LinkResponse> collection = jooqLinkRepository.findAll(tgChatId);
         return new ListLinksResponse(collection);
     }
 
     @Override
-    public Collection<LinkResponse> getAllLinks() {
+    public ListLinksResponse getAllLinks() {
         List<LinkResponse> collection = jooqLinkRepository.getAllLinks();
-        return collection;
+        return new ListLinksResponse(collection);
     }
 
     @Override
-    public Collection<LinkResponse> getAllUncheckedLinks() {
+    public ListLinksResponse getAllUncheckedLinks() {
         return null;
     }
 

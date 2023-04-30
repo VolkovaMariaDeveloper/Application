@@ -1,11 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-import javafx.util.Pair;
-import org.linkParser.parser.LinkParser;
-import org.linkParser.result.GitHubParserResult;
-import org.linkParser.result.ParserResult;
-import org.linkParser.result.StackOverflowParserResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,11 +7,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
-import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,26 +25,19 @@ public class JdbcLinkRepository {
     private final JdbcTemplate jdbcTemplate;
     private PlatformTransactionManager transactionManager;
     private final TransactionTemplate transactionTemplate;
-    @Autowired
-    // @Qualifier("GitHubService")
-    private final GitHubClient gitHubClient;
 
-    @Autowired
-    //@Qualifier("StackOverflowService")
-    private final StackOverflowClient stackOverflowClient;
 
-    JdbcLinkRepository(JdbcTemplate jdbcTemplate, PlatformTransactionManager transactionManager, LinkService linkService, GitHubClient gitHubClient, StackOverflowClient stackOverflowClient) {
+
+
+    JdbcLinkRepository(JdbcTemplate jdbcTemplate, PlatformTransactionManager transactionManager) {
         this.jdbcTemplate = jdbcTemplate;
         this.transactionManager = transactionManager;
         this.transactionTemplate = new TransactionTemplate(transactionManager, TransactionDefinition.withDefaults());
-        this.gitHubClient = gitHubClient;
-        this.stackOverflowClient = stackOverflowClient;
-
         this.transactionTemplate.setIsolationLevel(TransactionTemplate.ISOLATION_READ_COMMITTED);
     }
 
 
-    public long add(long tgChatId, String link) {
+    public long add(long tgChatId, String link, int count) {
 
         Long insertId = transactionTemplate.execute(status -> {
 
@@ -71,7 +54,6 @@ public class JdbcLinkRepository {
                     on conflict do nothing
                     """;
             String idSql = "select id from links where url=?";
-            int count = fillCount(link);
             List<Long> tempId = jdbcTemplate.query(linksSql, (rs, rn) -> rs.getLong("id"), link, count);
             Long id;
             if (tempId.isEmpty()) {
@@ -86,20 +68,20 @@ public class JdbcLinkRepository {
         return Objects.requireNonNull(insertId);
     }
 
-    public int fillCount(String url) {
-        ParserResult result = LinkParser.parseLink(url);
-        if (result instanceof GitHubParserResult) {
-            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
-            String user = pair.getKey();
-            String repo = pair.getValue();
-            return gitHubClient.fetchRepository(user, repo).size();
-        } else if (result instanceof StackOverflowParserResult) {
-            String questionId = ((StackOverflowParserResult) result).idQuestion;
-            long id = Long.parseLong(questionId);
-            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-            return list[0].answer_count();
-        } else return -1;
-    }
+//    public int fillCount(String url) {
+//        ParserResult result = LinkParser.parseLink(url);
+//        if (result instanceof GitHubParserResult) {
+//            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
+//            String user = pair.getKey();
+//            String repo = pair.getValue();
+//            return gitHubClient.fetchRepository(user, repo).size();
+//        } else if (result instanceof StackOverflowParserResult) {
+//            String questionId = ((StackOverflowParserResult) result).idQuestion;
+//            long id = Long.parseLong(questionId);
+//            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
+//            return list[0].answer_count();
+//        } else return -1;
+//    }
 
     public long remove(long tgChatId, String link) {
         String chat_linkSql = """

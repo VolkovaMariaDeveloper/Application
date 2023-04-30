@@ -3,7 +3,6 @@ package test_container.jdbc;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
@@ -26,17 +25,16 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     private JdbcLinkRepository linkRepository;
     @Autowired
     private JdbcChatRepository jdbcChatRepository;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Transactional
     @Rollback
     @Test
     void addTest() {
         long tgChatId = 1L;
+        int count = 2;
         String link = "https://github.com/VolkovaMariaDeveloper/Application";
         jdbcChatRepository.add(tgChatId);
-        long expectedId = linkRepository.add(tgChatId, link);
+        long expectedId = linkRepository.add(tgChatId, link,count);
 
         String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
 
@@ -65,11 +63,12 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         long secondTgChat_id = 2L;
         String secondLink = "https://stackoverflow.com/questions/52653836";
+        int count = 2;
 
         jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink);
+        linkRepository.add(firstTgChat_id, firstLink,count);
         jdbcChatRepository.add(secondTgChat_id);
-        linkRepository.add(secondTgChat_id, secondLink);
+        linkRepository.add(secondTgChat_id, secondLink,count);
 
         linkRepository.remove(secondTgChat_id, secondLink);
 
@@ -101,11 +100,13 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         long firstTgChat_id = 1L;
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
+        int count = 2;
+
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
         jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink);
-        linkRepository.add(firstTgChat_id, secondLink);
+        linkRepository.add(firstTgChat_id, firstLink,count);
+        linkRepository.add(firstTgChat_id, secondLink,count);
 
         List<LinkResponse> list = linkRepository.findAll(firstTgChat_id);
         //       String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
@@ -137,13 +138,13 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         long firstTgChat_id = 1L;
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
+        int count =2;
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
         jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink);
-        linkRepository.add(firstTgChat_id, secondLink);
+        linkRepository.add(firstTgChat_id, firstLink, count);
+        linkRepository.add(firstTgChat_id, secondLink,count);
 
-        List<LinkResponse> list = linkRepository.getAllLinks();
                String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
         try (Connection connection = DriverManager.getConnection(
                 DB_CONTAINER.getJdbcUrl(),
@@ -169,13 +170,14 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         long firstTgChat_id = 1L;
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
+        int count =2;
+
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
         jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink);
-        linkRepository.add(firstTgChat_id, secondLink);
+        linkRepository.add(firstTgChat_id, firstLink,count);
+        linkRepository.add(firstTgChat_id, secondLink,count);
 
-        List<LinkResponse> list = linkRepository.getAllUncheckedLinks();
         String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
         try (Connection connection = DriverManager.getConnection(
                 DB_CONTAINER.getJdbcUrl(),
