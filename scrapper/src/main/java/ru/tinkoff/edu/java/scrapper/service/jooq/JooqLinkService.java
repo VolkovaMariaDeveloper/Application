@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
@@ -12,7 +11,7 @@ import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Service
+
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     @Autowired

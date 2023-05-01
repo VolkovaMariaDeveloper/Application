@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jpa;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.entity.Chat;
 import ru.tinkoff.edu.java.scrapper.entity.Links;
@@ -14,9 +13,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-@Service
+
 @RequiredArgsConstructor
-public class JpaChatService implements TgChatService {
+public class JpaTgChatService implements TgChatService {
     @Autowired
     private JpaLinkRepository jpaLinkRepository;
 

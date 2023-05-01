@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.entity.Chat;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaChatRepository;
-import ru.tinkoff.edu.java.scrapper.service.jpa.JpaChatService;
+import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkService;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = ScrapperApplication.class)
 public class JpaChatTest extends IntegrationEnvironment {
     @Autowired
-    JpaChatService jpaChatService;
+    JpaTgChatService jpaTgChatService;
     @Autowired
     JpaChatRepository jpaChatRepository;
 
@@ -34,7 +34,7 @@ public class JpaChatTest extends IntegrationEnvironment {
     void registerTest() {
         long tgChatId = 1;
 
-        jpaChatService.register(tgChatId);
+        jpaTgChatService.register(tgChatId);
         List<Chat> response = jpaChatRepository.findAll();
         Chat chat = new Chat();
         chat.setId(tgChatId);
@@ -49,9 +49,9 @@ public class JpaChatTest extends IntegrationEnvironment {
     void unregisterTest() {
         List<Long> tgChatIds = List.of(1L, 2L, 3L);
         for (Long id : tgChatIds) {
-            jpaChatService.register(id);
+            jpaTgChatService.register(id);
         }
-        jpaChatService.unregister(2L);
+        jpaTgChatService.unregister(2L);
         List<Chat> response = jpaChatRepository.findAll();
         Chat chat1 = new Chat();
         chat1.setId(1L);
@@ -69,10 +69,10 @@ public class JpaChatTest extends IntegrationEnvironment {
         Set<Long> tgChatIds = Set.of(1L, 2L, 3L);
         String url = "http://localhost";
         for (Long id : tgChatIds) {
-            jpaChatService.register(id);
+            jpaTgChatService.register(id);
             jpaLinkService.add(id, url);
         }
-        List<Long> ListIds = jpaChatService.getChatIdsForLink(url);
+        List<Long> ListIds = jpaTgChatService.getChatIdsForLink(url);
         Set<Long> response = new HashSet<>(ListIds);
 
         assertThat(response).isEqualTo(tgChatIds);

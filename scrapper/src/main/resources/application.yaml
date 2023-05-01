@@ -2,6 +2,8 @@ app:
   test: 4
   scheduler:
     interval: 1500000
+    database-access-type: jdbc
+
 springdoc:
   swagger-ui:
     path: swagger-ui

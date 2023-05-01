@@ -17,7 +17,7 @@ import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
-import ru.tinkoff.edu.java.scrapper.service.jpa.JpaChatService;
+import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkService;
 
 import java.time.OffsetDateTime;
@@ -34,7 +34,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Mock
     CheckUpdater checkUpdater;
     @Autowired
-    JpaChatService jpaChatService;
+    JpaTgChatService jpaTgChatService;
     //    @Mock
 //    Chat chat;
 //    @Mock
@@ -61,7 +61,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
         long tgChatId = 1;
         String url = "http://localhost";
         int count = 2;
-        jpaChatService.register(tgChatId);
+        jpaTgChatService.register(tgChatId);
 
         Mockito.when(checkUpdater.fillCount(any(String.class))).thenReturn(count);
 
@@ -82,7 +82,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
         long tgChatId = 1;
         String url = "http://localhost";
         int count = 2;
-        jpaChatService.register(tgChatId);
+        jpaTgChatService.register(tgChatId);
         jpaLinkService.add(tgChatId, url);
         LinkResponse response = jpaLinkService.remove(tgChatId, url);
         LinkResponse expectedResponse = new LinkResponse(tgChatId, null, url, response.lastCheckTime(), count);
@@ -97,7 +97,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
         long tgChatId = 1;
         String url = "http://localhost";
         int count = 2;
-        jpaChatService.register(tgChatId);
+        jpaTgChatService.register(tgChatId);
         jpaLinkService.add(tgChatId, url + "1");
         jpaLinkService.add(tgChatId, url + "2");
         jpaLinkService.add(tgChatId, url + "3");

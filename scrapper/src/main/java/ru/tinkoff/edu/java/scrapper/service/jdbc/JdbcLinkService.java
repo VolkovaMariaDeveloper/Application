@@ -2,8 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
@@ -13,19 +11,16 @@ import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Service
-@Primary
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
-
     @Autowired
     private JdbcLinkRepository linkRepository;
     @Autowired
     private CheckUpdater checkUpdater;
 
-    JdbcLinkService(JdbcLinkRepository linkRepository) {
-        this.linkRepository = linkRepository;
-    }
+  //  public JdbcLinkService(JdbcLinkRepository linkRepository) {
+//        this.linkRepository = linkRepository;
+//    }
 
     @Override
     public LinkResponse add(long tgChatId, String url) {
@@ -36,7 +31,7 @@ public class JdbcLinkService implements LinkService {
         int count = checkUpdater.fillCount(url);
         long id = linkRepository.add(tgChatId, url, count);
 
-        return new LinkResponse(id, null, url, OffsetDateTime.now(),count);
+        return new LinkResponse(id, null, url, OffsetDateTime.now(), count);
     }
 
     @Override
