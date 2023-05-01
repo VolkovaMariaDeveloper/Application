@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.configuration.enam;
+package ru.tinkoff.edu.java.scrapper.configuration.conditional;
 
 public enum AccessType {
     JDBC("jdbc"),

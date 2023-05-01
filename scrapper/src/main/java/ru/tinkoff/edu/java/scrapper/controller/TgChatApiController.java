@@ -6,22 +6,22 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcTgChatService;
+import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
 
 @RestController
 public class TgChatApiController {
     @Autowired
-    private JdbcTgChatService jdbcTgChatService;
+    private TgChatService tgChatService;
     @PostMapping("/tg-chat/{id}")
     public ResponseEntity<Void> tgChatIdAdd(@PathVariable Long id) {
-        jdbcTgChatService.register(id);
+        tgChatService.register(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/tg-chat/{id}")
     public ResponseEntity<Void> tgChatIdDelete(@PathVariable Long id) {
-        jdbcTgChatService.unregister(id);
+        tgChatService.unregister(id);
         return ResponseEntity.ok().build();
     }
 

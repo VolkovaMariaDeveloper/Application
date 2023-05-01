@@ -11,7 +11,6 @@ public class JdbcLinkUpdater implements LinkUpdater {
     @Override
     public int update(int count, String link) {
         linkRepository.updateLinks(count, link);
-
         return 0;
     }
 }

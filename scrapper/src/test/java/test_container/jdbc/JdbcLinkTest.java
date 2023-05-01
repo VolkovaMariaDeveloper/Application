@@ -117,7 +117,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
 //            Statement statement = connection.createStatement();
 //            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
         for (LinkResponse el : list) {
-            actualLinks.add(el.link());
+            actualLinks.add(el.url());
         }
 
 //            while(result.next()) {

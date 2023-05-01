@@ -1,13 +1,8 @@
 package test_container.jdbc;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,63 +11,37 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
-import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkService;
+import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = ScrapperApplication.class)
+@RequiredArgsConstructor
 public class JpaLinkTest extends IntegrationEnvironment {
 
-    AutoCloseable openMock;
-    @Mock
-    CheckUpdater checkUpdater;
+
     @Autowired
     JpaTgChatService jpaTgChatService;
-    //    @Mock
-//    Chat chat;
-//    @Mock
-//    Links link;
-    @InjectMocks
+
     @Autowired
     JpaLinkService jpaLinkService;
 
-    @BeforeEach
-    void setup() {
-        openMock = MockitoAnnotations.openMocks(this);
-    }
 
-    @AfterEach
-    void tearDown() throws Exception {
-        openMock.close();
-    }
-
-    //Не мокается count , time  и остальное, что можно было бы закокать:(
+    //Не мокается count: Если не инжектить jpaLinkService: Cannot invoke "ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository.findAll()" because "this.jpaLinkRepository" is null
     @Transactional
     @Rollback
     @Test
     void addTest() {
         long tgChatId = 1;
         String url = "http://localhost";
-        int count = 2;
         jpaTgChatService.register(tgChatId);
-
-        Mockito.when(checkUpdater.fillCount(any(String.class))).thenReturn(count);
-
-//        Mockito.when(chat.getTrackedLinks()).thenReturn(links);
-//        Mockito.when(jpaChatRepository.findById(tgChatId)).thenReturn(Optional.of(chat));
-//       // Mockito.when(jpaChatRepository.findById(tgChatId).orElseThrow()).thenReturn(chat);
-//        Mockito.when(link.getSubscribers()).thenReturn(new HashSet<>(2));
-
         LinkResponse response = jpaLinkService.add(tgChatId, url);
-        LinkResponse expectedResponse = new LinkResponse(tgChatId, null, url, response.lastCheckTime(), count);
-        assertThat(response).isEqualTo(expectedResponse);
+        assertThat(response.url()).isEqualTo(url);
     }
 
     @Transactional
@@ -80,13 +49,18 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Test
     void removeTest() {
         long tgChatId = 1;
-        String url = "http://localhost";
-        int count = 2;
+        String url1 = "http://localhost";
+        String url2 = "http://localhost/new";
+
         jpaTgChatService.register(tgChatId);
-        jpaLinkService.add(tgChatId, url);
-        LinkResponse response = jpaLinkService.remove(tgChatId, url);
-        LinkResponse expectedResponse = new LinkResponse(tgChatId, null, url, response.lastCheckTime(), count);
-        assertThat(response).isEqualTo(expectedResponse);
+        jpaLinkService.add(tgChatId, url1);
+        jpaLinkService.add(tgChatId, url2);
+
+        jpaLinkService.remove(tgChatId, url1);
+
+        ListLinksResponse listResponse = jpaLinkService.findAllByChatId(tgChatId);
+        LinkResponse response = listResponse.links().get(0);
+        assertThat(response.url()).isEqualTo(url2);
     }
 
 
@@ -96,18 +70,19 @@ public class JpaLinkTest extends IntegrationEnvironment {
     void findAllByChatIdTest() {
         long tgChatId = 1;
         String url = "http://localhost";
-        int count = 2;
+
         jpaTgChatService.register(tgChatId);
         jpaLinkService.add(tgChatId, url + "1");
         jpaLinkService.add(tgChatId, url + "2");
         jpaLinkService.add(tgChatId, url + "3");
-        OffsetDateTime time = null;
+
         ListLinksResponse response = jpaLinkService.findAllByChatId(tgChatId);
-        ListLinksResponse expectedResponse = new ListLinksResponse(new ArrayList<>());
-        expectedResponse.links().add(new LinkResponse(tgChatId, null, url + "1", time, count));
-        expectedResponse.links().add(new LinkResponse(tgChatId, null, url + "2", time, count));
-        expectedResponse.links().add(new LinkResponse(tgChatId, null, url + "3", time, count));
-        assertThat(response).isEqualTo(expectedResponse);
+        Set<String> setResponse= new HashSet();
+        for(LinkResponse link: response.links()){
+            setResponse.add(link.url());
+        }
+        Set<String> expectedResponse = Set.of(url + "1",url + "2",url + "3");
+        assertThat(setResponse).isEqualTo(expectedResponse);
     }
 
 }

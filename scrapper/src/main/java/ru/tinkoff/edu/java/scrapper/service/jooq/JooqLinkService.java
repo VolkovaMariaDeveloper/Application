@@ -47,7 +47,8 @@ public class JooqLinkService implements LinkService {
 
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
-        return null;
+        List<LinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();
+        return new ListLinksResponse(collection);
     }
 
 }

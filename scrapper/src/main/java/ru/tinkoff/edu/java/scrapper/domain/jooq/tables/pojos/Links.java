@@ -5,15 +5,13 @@ package ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos;
 
 
 import jakarta.validation.constraints.Size;
-
-import java.beans.ConstructorProperties;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import javax.annotation.processing.Generated;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.processing.Generated;
+import java.beans.ConstructorProperties;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
 
 
 /**
@@ -33,7 +31,7 @@ public class Links implements Serializable {
 
     private String url;
     private Long id;
-    private LocalDateTime lastCheckTime;
+    private OffsetDateTime lastCheckTime;
     private Integer count;
 
     public Links() {}
@@ -49,7 +47,7 @@ public class Links implements Serializable {
     public Links(
         @NotNull String url,
         @NotNull Long id,
-        @Nullable LocalDateTime lastCheckTime,
+        @Nullable OffsetDateTime lastCheckTime,
         @Nullable Integer count
     ) {
         this.url = url;
@@ -94,14 +92,14 @@ public class Links implements Serializable {
      * Getter for <code>LINKS.LAST_CHECK_TIME</code>.
      */
     @Nullable
-    public LocalDateTime getLastCheckTime() {
+    public OffsetDateTime getLastCheckTime() {
         return this.lastCheckTime;
     }
 
     /**
      * Setter for <code>LINKS.LAST_CHECK_TIME</code>.
      */
-    public void setLastCheckTime(@Nullable LocalDateTime lastCheckTime) {
+    public void setLastCheckTime(@Nullable OffsetDateTime lastCheckTime) {
         this.lastCheckTime = lastCheckTime;
     }
 

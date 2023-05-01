@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.service.jpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Chat;
@@ -13,6 +14,7 @@ import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.mapper.FromLinksToLinkResponse;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,8 @@ public class JpaLinkService implements LinkService {
 
     @Autowired
     private JpaChatRepository jpaChatRepository;
+    @Autowired
+    private ApplicationConfig config;
 
     @Transactional
     @Override
@@ -94,6 +98,8 @@ public class JpaLinkService implements LinkService {
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
-        return null;
+        OffsetDateTime checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
+        List<Links> links = jpaLinkRepository.getAllUncheckedLinks(checkPeriod);
+        return FromLinksToLinkResponse.mapList(links);
     }
 }

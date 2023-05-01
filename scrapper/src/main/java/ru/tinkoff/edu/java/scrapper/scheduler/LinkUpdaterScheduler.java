@@ -8,6 +8,7 @@ import org.linkParser.result.GitHubParserResult;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import java.util.List;
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
+@ComponentScan(basePackages = {"ru.tinkoff.edu.java.scrapper.configuration"})
 public class LinkUpdaterScheduler {
     @Autowired
     private final LinkService linkService;
@@ -55,7 +57,7 @@ public class LinkUpdaterScheduler {
         List<LinkUpdateRequest> listUpdater = new ArrayList<>();
 
         for (LinkResponse link : listLinks.links()) {
-            String url = link.link();
+            String url = link.url();
             ParserResult result = LinkParser.parseLink(url);
             if (result instanceof GitHubParserResult) {
                 Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;

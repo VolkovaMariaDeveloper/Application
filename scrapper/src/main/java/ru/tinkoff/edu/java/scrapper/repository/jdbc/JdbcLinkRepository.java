@@ -7,6 +7,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 
 import java.sql.ResultSet;
@@ -25,11 +26,13 @@ public class JdbcLinkRepository {
     private final JdbcTemplate jdbcTemplate;
     private PlatformTransactionManager transactionManager;
     private final TransactionTemplate transactionTemplate;
+    private ApplicationConfig config;
 
 
 
 
-    JdbcLinkRepository(JdbcTemplate jdbcTemplate, PlatformTransactionManager transactionManager) {
+    JdbcLinkRepository(JdbcTemplate jdbcTemplate, PlatformTransactionManager transactionManager, ApplicationConfig config) {
+        this.config = config;
         this.jdbcTemplate = jdbcTemplate;
         this.transactionManager = transactionManager;
         this.transactionTemplate = new TransactionTemplate(transactionManager, TransactionDefinition.withDefaults());
@@ -68,20 +71,6 @@ public class JdbcLinkRepository {
         return Objects.requireNonNull(insertId);
     }
 
-//    public int fillCount(String url) {
-//        ParserResult result = LinkParser.parseLink(url);
-//        if (result instanceof GitHubParserResult) {
-//            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
-//            String user = pair.getKey();
-//            String repo = pair.getValue();
-//            return gitHubClient.fetchRepository(user, repo).size();
-//        } else if (result instanceof StackOverflowParserResult) {
-//            String questionId = ((StackOverflowParserResult) result).idQuestion;
-//            long id = Long.parseLong(questionId);
-//            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-//            return list[0].answer_count();
-//        } else return -1;
-//    }
 
     public long remove(long tgChatId, String link) {
         String chat_linkSql = """
@@ -161,8 +150,9 @@ public class JdbcLinkRepository {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
-                where (now()-last_check_time) > (2 * '1 HOUR'::interval)
+                where last_check_time > ?
                 """;
+        OffsetDateTime  checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
         return jdbcTemplate.query(
                 linksSql,
                 (rs, rn) -> {
@@ -172,7 +162,8 @@ public class JdbcLinkRepository {
                     int count = rs.getInt("count");
                     return new LinkResponse(id, null, link, lastCheck_Time, count);
 
-                }
+                },
+                checkPeriod
         );
     }
 
