@@ -18,16 +18,9 @@ public class JdbcLinkService implements LinkService {
     @Autowired
     private CheckUpdater checkUpdater;
 
-  //  public JdbcLinkService(JdbcLinkRepository linkRepository) {
-//        this.linkRepository = linkRepository;
-//    }
 
     @Override
     public LinkResponse add(long tgChatId, String url) {
-//        List<LinkResponse> listLinks = linkRepository.findAll(tgChatId);
-//        if(listLinks.contains(url)) {
-//        return null;
-//        }
         int count = checkUpdater.fillCount(url);
         long id = linkRepository.add(tgChatId, url, count);
 

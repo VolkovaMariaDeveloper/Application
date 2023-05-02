@@ -2,10 +2,12 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
-import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.Tables;
+import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -17,6 +19,7 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.LINKS;
 @RequiredArgsConstructor
 public class JooqLinkRepository {
     private final DSLContext context;
+    @Autowired
     private ApplicationConfig config;
 
     @Transactional
@@ -55,26 +58,26 @@ public class JooqLinkRepository {
                 .fetchSingleInto(Long.class);
     }
 
-    public List<LinkResponse> findAll(long tgChatId) {
+    public List<JooqLinkResponse> findAll(long tgChatId) {
         return context.select(LINKS.fields())
                 .from(LINKS)
                 .join(CHAT_LINK).on(CHAT_LINK.LINK_ID.eq(LINKS.ID))
                 .where(CHAT_LINK.CHAT_ID.eq(tgChatId))
-                .fetchInto(LinkResponse.class);
+                .fetchInto(JooqLinkResponse.class);
     }
 
     //Все сохраненные ссылки
-    public List<LinkResponse> getAllLinks() {
-        return context.select(LINKS.fields())
-                .select(LINKS)
-                .fetchInto(LinkResponse.class);
+    public List<JooqLinkResponse> getAllLinks() {
+        return context.select(Tables.LINKS.fields())
+                .from(Tables.LINKS)
+                .fetchInto(JooqLinkResponse.class);
     }
-    public List<LinkResponse> getAllUncheckedLinks() {
+    public List<JooqLinkResponse> getAllUncheckedLinks() {
         OffsetDateTime  checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
-        return context.select(LINKS.fields())
-                .from(LINKS)
-                .where(LINKS.LAST_CHECK_TIME.greaterThan(checkPeriod))
-                .fetchInto(LinkResponse.class);
+        return context.select(Tables.LINKS.fields())
+                .from(Tables.LINKS)
+                .where(Tables.LINKS.LAST_CHECK_TIME.lessOrEqual(checkPeriod))
+                .fetchInto(JooqLinkResponse.class);
     }
 
     public void updateLinks(int count, String link){

@@ -68,7 +68,7 @@ public class ListCommandTest {
         when(chat.id()).thenReturn(id);
         when(message.chat()).thenReturn(chat);
 
-        LinkResponse firstUrl = new LinkResponse(0, null,"https://github.com/VolkovaMariaDeveloper/Application/",null);
+        LinkResponse firstUrl = new LinkResponse(0, null,"https://github.com/VolkovaMariaDeveloper/Application/",null,0);
         ListLinkResponse listLinkResponse = new ListLinkResponse(List.of(firstUrl));
 
         when(scrapperClient.getTrackedLinks(id)).thenReturn(listLinkResponse);

@@ -2,11 +2,13 @@ package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.mappers.JooqMapper;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -35,20 +37,20 @@ public class JooqLinkService implements LinkService {
 
     @Override
     public ListLinksResponse findAllByChatId(long tgChatId) {
-        List<LinkResponse> collection = jooqLinkRepository.findAll(tgChatId);
-        return new ListLinksResponse(collection);
+        List<JooqLinkResponse> collection = jooqLinkRepository.findAll(tgChatId);
+        return JooqMapper.mapList(collection);
     }
 
     @Override
     public ListLinksResponse getAllLinks() {
-        List<LinkResponse> collection = jooqLinkRepository.getAllLinks();
-        return new ListLinksResponse(collection);
+        List<JooqLinkResponse> collection = jooqLinkRepository.getAllLinks();
+        return JooqMapper.mapList(collection);
     }
 
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
-        List<LinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();
-        return new ListLinksResponse(collection);
+        List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();//.getAllUncheckedLinks();
+        return JooqMapper.mapList(collection);
     }
 
 }

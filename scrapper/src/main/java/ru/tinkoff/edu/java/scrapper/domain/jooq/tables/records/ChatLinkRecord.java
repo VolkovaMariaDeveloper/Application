@@ -4,15 +4,17 @@
 package ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records;
 
 
+import java.beans.ConstructorProperties;
+
+import javax.annotation.processing.Generated;
+
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatLink;
 
-import javax.annotation.processing.Generated;
-import java.beans.ConstructorProperties;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatLink;
 
 
 /**

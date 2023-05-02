@@ -12,7 +12,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-import ru.tinkoff.edu.java.scrapper.service.jpa.mapper.FromLinksToLinkResponse;
+import ru.tinkoff.edu.java.scrapper.service.mappers.JpaMapper;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class JpaLinkService implements LinkService {
 
         jpaChatRepository.flush();
         jpaLinkRepository.flush();
-        return FromLinksToLinkResponse.map(link);
+        return JpaMapper.map(link);
     }
 
     @Transactional
@@ -77,7 +77,7 @@ public class JpaLinkService implements LinkService {
 
         trackedLinks.remove(link);
         jpaChatRepository.saveAndFlush(chat);
-        return FromLinksToLinkResponse.map(link);
+        return JpaMapper.map(link);
     }
     @Transactional(readOnly = true)
     @Override
@@ -85,14 +85,14 @@ public class JpaLinkService implements LinkService {
         Chat chat = jpaChatRepository.findById(tgChatId).get();
         Set<Links> trackedLinks = chat.getTrackedLinks();
         List<Links> links = new ArrayList<>(trackedLinks);
-        return FromLinksToLinkResponse.mapList(links);
+        return JpaMapper.mapList(links);
     }
 
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllLinks() {
         List<Links> links = jpaLinkRepository.findAll();
-        return FromLinksToLinkResponse.mapList(links);
+        return JpaMapper.mapList(links);
 
     }
     @Transactional(readOnly = true)
@@ -100,6 +100,6 @@ public class JpaLinkService implements LinkService {
     public ListLinksResponse getAllUncheckedLinks() {
         OffsetDateTime checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
         List<Links> links = jpaLinkRepository.getAllUncheckedLinks(checkPeriod);
-        return FromLinksToLinkResponse.mapList(links);
+        return JpaMapper.mapList(links);
     }
 }

@@ -96,21 +96,8 @@ public class JdbcChatTest extends IntegrationEnvironment{
         linkRepository.add(secondTgChat_id, link,count);
 
         List<Long> actualChatIdList = jdbcChatRepository.findAll(link);
-        //       String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-//        try (Connection connection = DriverManager.getConnection(
-//                DB_CONTAINER.getJdbcUrl(),
-//                DB_CONTAINER.getUsername(),
-//                DB_CONTAINER.getPassword())) {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
 
-//            while(result.next()) {
-//                actualLinks.add(result.getString("url"));
-//            }
         assertThat(actualChatIdList).isEqualTo(expectedChatIdList);
 
-//        } catch (SQLException exception) {
-//            throw new RuntimeException(exception);
-//        }
     }
 }

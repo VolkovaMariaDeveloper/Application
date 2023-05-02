@@ -2,7 +2,7 @@ app:
   test: 4
   scheduler:
     interval: 1500000
-  database-access-type: jpa
+  database-access-type: jooq
   checkPeriodHours: 2
 
 springdoc:

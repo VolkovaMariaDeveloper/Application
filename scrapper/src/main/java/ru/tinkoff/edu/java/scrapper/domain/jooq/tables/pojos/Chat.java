@@ -4,11 +4,12 @@
 package ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos;
 
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.processing.Generated;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
+
+import javax.annotation.processing.Generated;
+
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -44,6 +45,7 @@ public class Chat implements Serializable {
     /**
      * Getter for <code>CHAT.ID</code>.
      */
+    @jakarta.validation.constraints.NotNull
     @NotNull
     public Long getId() {
         return this.id;

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.jpa.mapper;
+package ru.tinkoff.edu.java.scrapper.service.mappers;
 
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FromLinksToLinkResponse {
+public class JpaMapper {
     public static LinkResponse map(Links link) {
         long id = link.getId();
         String url = link.getUrl();
