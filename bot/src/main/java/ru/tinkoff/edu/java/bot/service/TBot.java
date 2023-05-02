@@ -3,13 +3,11 @@ package ru.tinkoff.edu.java.bot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
-import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 import java.util.List;
@@ -34,11 +32,11 @@ public class TBot extends TelegramLongPollingBot implements IBot {
     @PostConstruct
     @Override
     public void start() {
-        try {
-            this.execute(new SetMyCommands(commandContainer.listCommand, new BotCommandScopeDefault(), null));
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            this.execute(new SetMyCommands(commandContainer.listCommand, new BotCommandScopeDefault(), null));
+//        } catch (TelegramApiException e) {
+//            throw new RuntimeException(e);
+//        }
         bot.setUpdatesListener(updates -> {
             updates.forEach(this::process);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -64,9 +62,14 @@ public class TBot extends TelegramLongPollingBot implements IBot {
     }
     @Override
     public void onUpdateReceived(org.telegram.telegrambots.meta.api.objects.Update update) {
+        if (!update.hasMessage()) {
+            return;}
     }
     @Override
     public String getBotUsername() {
         return BOT_NAME;
+    }
+    public void sendMessage(SendMessage message){
+        bot.execute(message);
     }
 }

@@ -1,6 +1,7 @@
 spring:
   liquibase:
-    changeLog: "classpath: db/changelog/db-changelog-master.yaml"
+    changeLog: "classpath: migrations/master.yaml"
+    #enabled: false
 
   datasource:
     url:  jdbc:postgresql://localhost:5432/scrapper

@@ -1,4 +1,6 @@
 package ru.tinkoff.edu.java.bot.dto;
 
-public record LinkResponse(long id, String url) {
+import java.time.OffsetDateTime;
+
+public record LinkResponse(long id, String description, String link, OffsetDateTime lastCheckTime) {
 }

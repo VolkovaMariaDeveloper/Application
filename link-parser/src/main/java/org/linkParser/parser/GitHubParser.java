@@ -26,7 +26,7 @@ public class GitHubParser implements Parser {
     }
 
     public boolean checkLinkGitHub(String link) {
-        String d = "https://github.com/[\\w-]*/[\\w-]*/";
+        String d = "https://github.com/[\\w-]*/[\\w-]*";
         return link.matches(d);
     }
 }

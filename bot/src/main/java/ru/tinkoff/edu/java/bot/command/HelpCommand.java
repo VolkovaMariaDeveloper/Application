@@ -17,11 +17,11 @@ public class HelpCommand implements ICommand {
     
     Для этого необходимо ввести команду /track и ссылку, на обновления которой вы хотите подписаться.
     Например:
-    /track https://stackoverflow.com/questions/75927558
+    /track https://stackoverflow.com/questions/75927558/
     
     Чтобы отписаться от рассылки введите команду /untrack и ссылку на вопрос или репозиторий.
     Например:
-    /untrack https://stackoverflow.com/questions/75927558
+    /untrack https://stackoverflow.com/questions/75927558/
     
     Для получения списка всех отслеживаемых ссылок введите команду /list.
     """;

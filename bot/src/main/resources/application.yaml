@@ -11,4 +11,11 @@ ApplicationConfig:
   token: ${TOKEN}
 
 scrapper:
-  url: http://localhost:8081
+  url: http://localhost:8080
+
+spring:
+  datasource:
+    url:  jdbc:postgresql://localhost:5432/scrapper
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver

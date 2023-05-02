@@ -27,13 +27,13 @@ public class CommandContainer implements ICommandContainer {
     public CommandContainer(ScrapperClient scrapperClient) {
         commandMap = new HashMap<>();
         ICommand command;
-        commandMap.put(START.toString(), command = new StartCommand());
+        commandMap.put(START.toString(), command = new StartCommand(scrapperClient));
         listCommand.add(command.toApiCommand());
         commandMap.put(HELP.toString(), command = new HelpCommand());
         listCommand.add(command.toApiCommand());
         commandMap.put(TRACK.toString(), command = new TrackCommand(scrapperClient));
         listCommand.add(command.toApiCommand());
-        commandMap.put(UNTRACK.toString(), command = new UntrackCommand());
+        commandMap.put(UNTRACK.toString(), command = new UntrackCommand(scrapperClient));
         listCommand.add(command.toApiCommand());
         commandMap.put(LIST.toString(), command = new ListCommand(scrapperClient));
         listCommand.add(command.toApiCommand());

@@ -1,24 +1,36 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.tinkoff.edu.java.scrapper.dto.GitHubResponse;
+import reactor.core.publisher.Mono;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Service("GitHubService")
+//@RequiredArgsConstructor
 public class GitHubClient {
-
+    @Autowired
+    @Qualifier("gitHubWebClient")
     private final WebClient gitHubClient;
 
+    public GitHubClient(WebClient gitHubClient) {
+        this.gitHubClient = gitHubClient;
+    }
 
-
-    public GitHubResponse fetchRepository(String user, String repository) {
-        return gitHubClient
-                .get()
-                .uri("/repos/{user}/{repository}", user, repository)
+    public List<String> fetchRepository(String user, String repository) {
+        Mono<List<GitHubResponse>> response = gitHubClient.get()
+                .uri("/repos/{user}/{repository}/branches", user, repository)
                 .retrieve()
-                .bodyToMono(GitHubResponse.class)
-                .block();
+                .bodyToMono(new ParameterizedTypeReference<List<GitHubResponse>>() {});
+                List<GitHubResponse> branches = response.block();
+        return branches.stream()
+                .map(GitHubResponse::name)
+                .collect(Collectors.toList());
     }
 }
