@@ -13,9 +13,9 @@ public class RabbitMQConfiguration {
     String exchangeName;
     String queueName;
 
-    public RabbitMQConfiguration(String exchangeName, String queueName) {
-        this.exchangeName = exchangeName;
-        this.queueName = queueName;
+    public RabbitMQConfiguration(ApplicationConfig config) {
+        this.exchangeName = config.exchangeName();
+        this.queueName = config.queueName();
     }
     @Bean
     public CachingConnectionFactory connectionFactory(){

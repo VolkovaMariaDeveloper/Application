@@ -9,14 +9,15 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 
 public class RabbitMQConfiguration {
     String exchangeName;
     String queueName;
 
-    public RabbitMQConfiguration(String exchangeName, String queueName) {
-        this.exchangeName = exchangeName;
-        this.queueName = queueName;
+    public RabbitMQConfiguration(ApplicationConfig config) {
+        this.exchangeName = config.exchangeName();
+        this.queueName = config.queueName();
     }
     @Bean
     public CachingConnectionFactory connectionFactory(){

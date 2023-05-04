@@ -5,6 +5,7 @@ app:
   database-access-type: jdbc
   checkPeriodHours: 2
 
+
 springdoc:
   swagger-ui:
     path: swagger-ui
