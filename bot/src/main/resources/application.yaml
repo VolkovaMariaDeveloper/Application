@@ -2,6 +2,7 @@ app:
   test: 5
   exchangeName: scrapper
   queueName: scrapper
+  useQueue: true
 #    routing-key: scrapper
 
 springdoc:
