@@ -4,6 +4,9 @@ app:
     interval: 1500000
   database-access-type: jdbc
   checkPeriodHours: 2
+  useQueue: true
+  exchangeName: scrapper
+  queueName: scrapper
 
 
 springdoc:

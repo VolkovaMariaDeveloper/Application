@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
@@ -22,6 +21,7 @@ import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
+import ru.tinkoff.edu.java.scrapper.service.sender.UpdateMessageSender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,10 @@ public class LinkUpdaterScheduler {
     private final GitHubClient gitHubClient;
     @Autowired
     private final StackOverflowClient stackOverflowClient;
+
+
     @Autowired
-    private final BotClient botClient;
+    private final UpdateMessageSender updateMessageSender;
     private List<Long> tgChatIds;
     private final String BRANCH_ADDED = "Была добавлена новая ветка";
     private final String BRANCH_REMOVED = "Количество веток уменьшилось";
@@ -90,7 +92,7 @@ public class LinkUpdaterScheduler {
         }
         for (LinkUpdateRequest link : listUpdater) {
             log.info("Link {} has a new update", link.url());
-            botClient.updateLink(link);
+            updateMessageSender.send(link);
             log.info("Link {} has a new update, we inform the following chats: {} ", link.url(), tgChatIds);
             linkUpdater.update(link.count(),link.url());
         }
