@@ -57,7 +57,6 @@ public class LinkUpdaterScheduler {
     public void update() {
         ListLinksResponse listLinks = linkService.getAllUncheckedLinks();
         List<LinkUpdateRequest> listUpdater = new ArrayList<>();
-
         for (LinkResponse link : listLinks.links()) {
             String url = link.url();
             ParserResult result = LinkParser.parseLink(url);

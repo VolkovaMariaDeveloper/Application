@@ -16,7 +16,7 @@ public class RabbitSenderConfiguration {
     private final RabbitTemplate rabbitTemplate;
     private final Queue queue;
     @Bean
-    UpdateMessageSender updateMessageSender(){
+    public UpdateMessageSender updateMessageSender(){
         return new ScrapperQueueProducer(rabbitTemplate, queue);
     }
 }

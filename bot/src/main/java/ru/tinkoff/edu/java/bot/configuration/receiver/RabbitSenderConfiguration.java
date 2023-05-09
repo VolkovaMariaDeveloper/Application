@@ -1,23 +1,20 @@
-package ru.tinkoff.edu.java.bot.configuration.sender;
+package ru.tinkoff.edu.java.bot.configuration.receiver;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.bot.service.TBot;
 import ru.tinkoff.edu.java.bot.service.update.ScrapperQueueListener;
-import ru.tinkoff.edu.java.bot.service.update.SendUpdates;
+import ru.tinkoff.edu.java.bot.service.update.ReceiverUpdates;
 
 @RequiredArgsConstructor
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "use-queue", havingValue = "true")
 public class RabbitSenderConfiguration {
-    @Autowired
-    private final TBot bot;
 
     @Bean
-    public SendUpdates sendUpdates(){
+    public ReceiverUpdates receiveUpdates(TBot bot){
         return new ScrapperQueueListener(bot);
     }
 }

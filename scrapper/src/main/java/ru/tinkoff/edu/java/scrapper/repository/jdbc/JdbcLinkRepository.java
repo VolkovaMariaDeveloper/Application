@@ -26,7 +26,7 @@ public class JdbcLinkRepository {
     private final JdbcTemplate jdbcTemplate;
     private PlatformTransactionManager transactionManager;
     private final TransactionTemplate transactionTemplate;
-    private ApplicationConfig config;
+    private final ApplicationConfig config;
 
 
 
@@ -150,7 +150,7 @@ public class JdbcLinkRepository {
         String linksSql = """
                 select id, url, last_check_time, count 
                 from links
-                where last_check_time > ?
+                where last_check_time < ?
                 """;
         OffsetDateTime  checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
         return jdbcTemplate.query(

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Log4j2
 @RequiredArgsConstructor
-public abstract class SendUpdates {
+public abstract class ReceiverUpdates {
     @Autowired
     private final TBot bot;
     public abstract void receiver(LinkUpdateRequest linkUpdate);
