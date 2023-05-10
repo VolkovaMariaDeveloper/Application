@@ -6,4 +6,4 @@ WORKDIR /Application
 
 COPY ${JAR_FILE} /Application/bot.jar
 
-ENTRYPOINT exec java-jar /Application/bot.jar
+ENTRYPOINT ["java", "-jar", "scrapper.jar"]
