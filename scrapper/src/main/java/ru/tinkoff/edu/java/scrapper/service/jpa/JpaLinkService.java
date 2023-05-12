@@ -15,10 +15,7 @@ import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.mappers.JpaMapper;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -46,15 +43,14 @@ public class JpaLinkService implements LinkService {
 //                break;
 //            }
 //        }
-        if(!exist) {
+        if (!exist) {
             link = new Links();
             int count = checkUpdater.fillCount(url);
 
             link.setUrl(url);
             link.setCount(count);
             link.setSubscribers(new HashSet<>());
-        }
-        else{
+        } else {
             link = jpaLinkRepository.findByUrl(url);
         }
         Chat chat = jpaChatRepository.findById(tgChatId).orElseThrow();
@@ -74,11 +70,47 @@ public class JpaLinkService implements LinkService {
         Chat chat = jpaChatRepository.findById(tgChatId).orElse(null);
         assert chat != null;
         Set<Links> trackedLinks = chat.getTrackedLinks();
-
         trackedLinks.remove(link);
+        link.getSubscribers().remove(chat);
+        if (link.getSubscribers().isEmpty()) {
+            jpaLinkRepository.removeByUrl(url);
+        }
         jpaChatRepository.saveAndFlush(chat);
+        jpaLinkRepository.saveAndFlush(link);
         return JpaMapper.map(link);
     }
+//    public long remove(long tgChatId, String link) {
+//        String chat_linkSql = """
+//                delete from chat_link using links
+//                where id = link_id and chat_id = ? and url = ?
+//                returning id
+//                """;
+//        //удаление неотслеживаемой ссылки из таблицы всех ссылок
+//        String linksSql = """
+//                delete from links
+//                where id = ?
+//                """;
+//
+//        long id = jdbcTemplate.queryForObject(chat_linkSql, Long.class, tgChatId, link);
+//        if(getFollowers(id)==0){
+//            jdbcTemplate.update(linksSql, id);
+//        }
+//        return Objects.requireNonNull(id);
+//
+//
+//    }
+//
+//    public long getFollowers(long linkId) {
+//        String chat_linkSql = """
+//                select count (*)
+//                from chat_link
+//                where link_id = ?
+//                """;
+//        long countFollowers = jdbcTemplate.queryForObject(chat_linkSql, Long.class, linkId);
+//        return Objects.requireNonNull(countFollowers);
+//
+//    }
+
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse findAllByChatId(long tgChatId) {
@@ -95,6 +127,7 @@ public class JpaLinkService implements LinkService {
         return JpaMapper.mapList(links);
 
     }
+
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllUncheckedLinks() {

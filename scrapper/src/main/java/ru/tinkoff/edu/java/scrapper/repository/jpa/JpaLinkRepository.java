@@ -13,8 +13,11 @@ public interface JpaLinkRepository extends JpaRepository<Links, Long> {
 
     boolean existsByUrl(String url);
 
+
     @Query(value = "select l from Links l where l.lastCheckTime <= :checkPeriod")
     List<Links> getAllUncheckedLinks(OffsetDateTime checkPeriod);
+
+    int removeByUrl(String url);
 
 
 }

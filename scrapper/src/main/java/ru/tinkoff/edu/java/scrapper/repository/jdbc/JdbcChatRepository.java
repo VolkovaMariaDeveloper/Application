@@ -36,7 +36,7 @@ public class JdbcChatRepository {
         jdbcTemplate.update(linksSql, tgChatId);
     }
 
-    public List<Long> findAll(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
+    public List<Long> findAllByLink(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
         String sql = """
                 select chat_id from chat_link
                 join links on id = link_id 
@@ -44,11 +44,19 @@ public class JdbcChatRepository {
                 """;
         return jdbcTemplate.query(
                 sql,
-                (rs, rn) -> {
-                    long id = rs.getLong("chat_id");
-                    return id;
-                },
+                (rs, rn) -> rs.getLong("chat_id"),
                 link
+        );
+    }
+
+    public List<Long> getAllChats() {// найти все чаты
+        String sql = """
+                select id from chat
+                             
+                """;
+        return jdbcTemplate.query(
+                sql,
+                (rs, rn) -> rs.getLong("id")
         );
     }
 

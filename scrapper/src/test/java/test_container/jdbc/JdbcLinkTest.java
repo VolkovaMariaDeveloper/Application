@@ -7,87 +7,61 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
+import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcTgChatService;
+import test_container.IntegrationEnvironment;
 
-import java.sql.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest(classes = ScrapperApplication.class)
-//@ContextConfiguration(classes = ApplicationConfig.class)
+@SpringBootTest(classes = ScrapperApplication.class,
+        properties = {"app.database-access-type=jdbc"})
+
 public class JdbcLinkTest extends IntegrationEnvironment {
+
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    JdbcTgChatService jdbcTgChatService;
+
     @Autowired
-    private JdbcChatRepository jdbcChatRepository;
+    JdbcLinkService  jdbcLinkService;
 
     @Transactional
     @Rollback
     @Test
     void addTest() {
         long tgChatId = 1L;
-        int count = 2;
         String link = "https://github.com/VolkovaMariaDeveloper/Application";
-        jdbcChatRepository.add(tgChatId);
-        long expectedId = linkRepository.add(tgChatId, link,count);
-
-        String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-
-        try (Connection connection = DriverManager.getConnection(
-                DB_CONTAINER.getJdbcUrl(),
-                DB_CONTAINER.getUsername(),
-                DB_CONTAINER.getPassword())) {
-
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-            if (result.next()) {
-                assertAll("Should return adding url and link id",
-                        () -> assertThat(result.getString("url")).isEqualTo(link),
-                        () -> assertThat(result.getLong("id")).isEqualTo(expectedId));
-            }
-        } catch (SQLException exception) {
-            throw new RuntimeException(exception);
-        }
+        jdbcTgChatService.register(tgChatId);
+        LinkResponse response =  jdbcLinkService.add(tgChatId, link);
+        assertAll("Should return adding url and link id",
+                () -> assertThat(response.url()).isEqualTo(link),
+                () -> assertThat(response.id()).isEqualTo(tgChatId));
     }
+
 
     @Test
     @Transactional
     @Rollback
     void removeTest() {
         long firstTgChat_id = 1L;
-        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         long secondTgChat_id = 2L;
+        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
-        int count = 2;
+        jdbcTgChatService.register(firstTgChat_id);
+        jdbcTgChatService.register(secondTgChat_id);
+        jdbcLinkService.add(firstTgChat_id, firstLink);
+        jdbcLinkService.add(secondTgChat_id, secondLink);
+        jdbcLinkService.remove(firstTgChat_id, firstLink);
+        ListLinksResponse links =  jdbcLinkService.getAllLinks();
 
-        jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink,count);
-        jdbcChatRepository.add(secondTgChat_id);
-        linkRepository.add(secondTgChat_id, secondLink,count);
-
-        linkRepository.remove(secondTgChat_id, secondLink);
-
-        String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-        try (Connection connection = DriverManager.getConnection(
-                DB_CONTAINER.getJdbcUrl(),
-                DB_CONTAINER.getUsername(),
-                DB_CONTAINER.getPassword())) {
-
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-
-            while (result.next()) {
-                assertThat(result.getString("url")).isNotEqualTo(secondLink);
+        assertThat(links.links().get(0).url()).isEqualTo(secondLink);
             }
-        } catch (SQLException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
+
+
 
 
     //с транзакцией почему-то result.next() = false, поэтому проверяла по возвращаемому значению, а не по наличию в таблице.
@@ -96,41 +70,24 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     @Test
     @Transactional
     @Rollback
-    void findAllTest() {
+    void findAllByChatIdTest() {
         long firstTgChat_id = 1L;
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
-        int count = 2;
 
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
-        jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink,count);
-        linkRepository.add(firstTgChat_id, secondLink,count);
-
-        List<LinkResponse> list = linkRepository.findAll(firstTgChat_id);
-        //       String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-//        try (Connection connection = DriverManager.getConnection(
-//                DB_CONTAINER.getJdbcUrl(),
-//                DB_CONTAINER.getUsername(),
-//                DB_CONTAINER.getPassword())) {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-        for (LinkResponse el : list) {
+        jdbcTgChatService.register(firstTgChat_id);
+        jdbcLinkService.add(firstTgChat_id, firstLink);
+        jdbcLinkService.add(firstTgChat_id, secondLink);
+        ListLinksResponse list =  jdbcLinkService.findAllByChatId(firstTgChat_id);
+        for (LinkResponse el : list.links()) {
             actualLinks.add(el.url());
         }
-
-//            while(result.next()) {
-//                actualLinks.add(result.getString("url"));
-//            }
         assertThat(actualLinks).isEqualTo(expectedLinks);
-
-//        } catch (SQLException exception) {
-//            throw new RuntimeException(exception);
-//        }
     }
 
-    //аналогично без аннотаций транзакций работает как надо, с ними result.next() = false
+
     @Test
     @Transactional
     @Rollback
@@ -138,60 +95,20 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         long firstTgChat_id = 1L;
         String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
         String secondLink = "https://stackoverflow.com/questions/52653836";
-        int count =2;
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
-        jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink, count);
-        linkRepository.add(firstTgChat_id, secondLink,count);
-
-               String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-        try (Connection connection = DriverManager.getConnection(
-                DB_CONTAINER.getJdbcUrl(),
-                DB_CONTAINER.getUsername(),
-                DB_CONTAINER.getPassword())) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-            while(result.next()) {
-                actualLinks.add(result.getString("url"));
-            }
+        jdbcTgChatService.register(firstTgChat_id);
+        jdbcLinkService.add(firstTgChat_id, firstLink);
+        jdbcLinkService.add(firstTgChat_id, secondLink);
+        ListLinksResponse list =  jdbcLinkService.getAllLinks();
+        for (LinkResponse el : list.links()) {
+            actualLinks.add(el.url());
+        }
         assertThat(actualLinks).isEqualTo(expectedLinks);
 
-        } catch (SQLException exception) {
-            throw new RuntimeException(exception);
-        }
+
     }
 
     //аналогично без аннотаций транзакций работает как надо, с ними result.next() = false
-   @Transactional
-   @Rollback
-   @Test
-    void getAllUncheckedLinksTest() {
-        long firstTgChat_id = 1L;
-        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
-        String secondLink = "https://stackoverflow.com/questions/52653836";
-        int count =2;
 
-        Set<String> actualLinks = new HashSet<>();
-        Set<String> expectedLinks = Set.of(firstLink, secondLink);
-        jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, firstLink,count);
-        linkRepository.add(firstTgChat_id, secondLink,count);
-
-        String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-        try (Connection connection = DriverManager.getConnection(
-                DB_CONTAINER.getJdbcUrl(),
-                DB_CONTAINER.getUsername(),
-                DB_CONTAINER.getPassword())) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
-            while(result.next()) {
-                actualLinks.add(result.getString("url"));
-            }
-            assertThat(actualLinks).isEqualTo(expectedLinks);
-
-        } catch (SQLException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
 }

@@ -21,8 +21,12 @@ public class JooqTgChatService implements TgChatService {
         jooqChatRepository.remove(tgChatId);}
 
     @Override
-    public List<Long> getChatIdsForLink(String link) {
-        return jooqChatRepository.findAll(link);
+    public List<Long> getAllChatByLink(String link) {
+        return jooqChatRepository.findAllByLink(link);
+    }
+
+    public List<Long> getAllChats() {
+        return jooqChatRepository.getAllChats();
     }
 
 }

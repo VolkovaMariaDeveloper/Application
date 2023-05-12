@@ -20,8 +20,12 @@ public class JdbcTgChatService implements TgChatService {
         jdbcChatRepository.remove(tgChatId);}
 
     @Override
-    public List<Long> getChatIdsForLink(String link) {
-        return jdbcChatRepository.findAll(link);
+    public List<Long> getAllChatByLink(String link) {
+        return jdbcChatRepository.findAllByLink(link);
+    }
+
+    public List<Long> getAllChats() {
+        return jdbcChatRepository.getAllChats();
     }
 
 

@@ -66,12 +66,12 @@ public class LinkUpdaterScheduler {
                 String repo = pair.getValue();
                 int countBranches = gitHubClient.fetchRepository(user, repo).size();
                 if (countBranches > link.count()) {
-                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    tgChatIds = tgChatService.getAllChatByLink(url);
                     listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_ADDED),tgChatIds,countBranches));
                     log.info("Link {} has a new update", url);
                 }
                 if (countBranches < link.count()) {
-                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    tgChatIds = tgChatService.getAllChatByLink(url);
                     listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_REMOVED),tgChatIds,countBranches));
                     log.info("Link {} has a new update", url);
                 }
@@ -82,7 +82,7 @@ public class LinkUpdaterScheduler {
                 StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
                 int countAnswers = list[0].answer_count();
                 if (countAnswers > link.count()){
-                    tgChatIds = tgChatService.getChatIdsForLink(url);
+                    tgChatIds = tgChatService.getAllChatByLink(url);
                     listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, ANSWER_ADDED),tgChatIds,countAnswers));
                 }
 

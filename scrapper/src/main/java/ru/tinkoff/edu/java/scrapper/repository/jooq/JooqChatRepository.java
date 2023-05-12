@@ -21,19 +21,24 @@ public class JooqChatRepository {
     }
 
     public void remove(long tgChatId) {
-        context.deleteFrom(CHAT).using(CHAT_LINK)
+        context.deleteFrom(CHAT)//.using(CHAT_LINK)
                 .where(CHAT.ID.eq(tgChatId))
-                .and(CHAT_LINK.CHAT_ID.eq(CHAT.ID))
-                .returningResult(CHAT.ID)
-                .fetchSingleInto(Long.class);
+                //.and(CHAT_LINK.CHAT_ID.eq(CHAT.ID))
+                .execute();
     }
 
 
-    public List<Long> findAll(String link) {
+    public List<Long> findAllByLink(String link) {
         return context.select(CHAT_LINK.CHAT_ID)
                 .from(CHAT_LINK)
                 .join(LINKS).on(LINKS.ID.eq(CHAT_LINK.LINK_ID))
                 .where(LINKS.URL.eq(link))
+                .fetchInto(Long.class);
+    }
+
+    public List<Long> getAllChats() {
+        return context.select(CHAT.ID)
+                .from(CHAT)
                 .fetchInto(Long.class);
     }
 }

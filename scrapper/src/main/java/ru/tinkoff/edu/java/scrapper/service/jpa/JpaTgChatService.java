@@ -38,11 +38,20 @@ public class JpaTgChatService implements TgChatService {
     }
     @Transactional(readOnly = true)
     @Override
-    public List<Long> getChatIdsForLink(String url) {
+    public List<Long> getAllChatByLink(String url) {
         Links link = jpaLinkRepository.findByUrl(url);
         Set<Chat> subscribers = link.getSubscribers();
         List<Long> ids = new ArrayList<>();
         for (Chat chat : subscribers) {
+            ids.add(chat.getId());
+        }
+        return ids;
+    }
+    @Transactional(readOnly = true)
+    public List<Long> getAllChats() {
+        List<Chat> chats= jpaChatRepository.findAll();
+        List<Long> ids = new ArrayList<>();
+        for (Chat chat : chats) {
             ids.add(chat.getId());
         }
         return ids;
