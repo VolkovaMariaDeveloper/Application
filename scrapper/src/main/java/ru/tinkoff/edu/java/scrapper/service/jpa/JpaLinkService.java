@@ -37,15 +37,15 @@ public class JpaLinkService implements LinkService {
     @Transactional
     @Override
     public LinkResponse add(long tgChatId, String url) {
-        List<Links> listAllLinks = jpaLinkRepository.findAll();
+//        List<Links> listAllLinks = jpaLinkRepository.findAll();
         Links link;
-        boolean exist = false;
-        for (Links checkedLink:listAllLinks){
-            if(checkedLink.getUrl().equals(url)){
-                exist = true;
-                break;
-            }
-        }
+        boolean exist = jpaLinkRepository.existsByUrl(url);
+//        for (Links checkedLink:listAllLinks){
+//            if(checkedLink.getUrl().equals(url)){
+//                exist = true;
+//                break;
+//            }
+//        }
         if(!exist) {
             link = new Links();
             int count = checkUpdater.fillCount(url);

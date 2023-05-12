@@ -9,7 +9,12 @@ import java.util.List;
 
 public interface JpaLinkRepository extends JpaRepository<Links, Long> {
     Links findByUrl(String url);
+
+
+    boolean existsByUrl(String url);
+
     @Query(value = "select l from Links l where l.lastCheckTime <= :checkPeriod")
     List<Links> getAllUncheckedLinks(OffsetDateTime checkPeriod);
+
 
 }

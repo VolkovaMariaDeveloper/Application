@@ -50,7 +50,8 @@ services:
 #      - RABBITMQ_DEFAULT_USER = user
 #      - RABBITMQ_DEFAULT_PASS = password
     volumes:
-      - ./rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
@@ -69,5 +70,6 @@ volumes:
     external: false
     name: migrations_data
   rabbitmq_data:
-    external: false
-    name: rabbitmq_data
+  rabbitmq_logs:
+#    external: false
+#    name: rabbitmq_data

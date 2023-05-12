@@ -11,10 +11,8 @@ public class JpaLinkUpdater implements LinkUpdater {
     @Autowired
     private JpaLinkRepository jpaLinkRepository;
     @Override
-    public int update(int count, String url) {
+    public void update(int count, String url) {
         Links link = jpaLinkRepository.findByUrl(url);
         link.setCount(count);
-        jpaLinkRepository.flush();
-        return 0;
     }
 }

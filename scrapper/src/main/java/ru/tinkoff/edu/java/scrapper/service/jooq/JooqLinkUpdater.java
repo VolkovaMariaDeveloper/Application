@@ -11,8 +11,7 @@ public class JooqLinkUpdater implements LinkUpdater {
     @Autowired
     private JooqLinkRepository jooqRepository;
     @Override
-    public int update(int count, String link) {
+    public void update(int count, String link) {
         jooqRepository.updateLinks(count, link);
-        return 0;
     }
 }
