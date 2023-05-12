@@ -42,6 +42,7 @@ public class ChatRecord extends UpdatableRecordImpl<ChatRecord> implements Recor
     /**
      * Getter for <code>CHAT.ID</code>.
      */
+    @jakarta.validation.constraints.NotNull
     @NotNull
     public Long getId() {
         return (Long) get(0);

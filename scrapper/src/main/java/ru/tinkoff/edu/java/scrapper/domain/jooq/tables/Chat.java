@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function1;
-import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -64,7 +63,7 @@ public class Chat extends TableImpl<ChatRecord> {
     /**
      * The column <code>CHAT.ID</code>.
      */
-    public final TableField<ChatRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<ChatRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false), this, "");
 
     private Chat(Name alias, Table<ChatRecord> aliased) {
         this(alias, aliased, null);
@@ -103,12 +102,6 @@ public class Chat extends TableImpl<ChatRecord> {
     @NotNull
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
-    }
-
-    @Override
-    @NotNull
-    public Identity<ChatRecord, Long> getIdentity() {
-        return (Identity<ChatRecord, Long>) super.getIdentity();
     }
 
     @Override

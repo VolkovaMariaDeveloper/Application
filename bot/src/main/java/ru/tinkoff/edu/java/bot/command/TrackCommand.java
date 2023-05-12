@@ -41,7 +41,7 @@ public class TrackCommand implements ICommand {
         } else {
             ListLinkResponse listLinks = scrapperClient.getTrackedLinks(chatId);
             for (LinkResponse link : listLinks.links()) {
-                if (link.link().equals(words[1])) {
+                if (link.url().equals(words[1])) {
                     return new SendMessage(chatId, String.format(EXISTING_LINK_MESSAGE, words[1]));
                 }
             }

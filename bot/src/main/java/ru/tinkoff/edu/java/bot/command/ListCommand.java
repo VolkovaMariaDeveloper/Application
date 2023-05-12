@@ -42,7 +42,7 @@ public class ListCommand implements ICommand {
         } else {
             StringBuilder linksList = new StringBuilder(SUCCESSFUL_MESSAGE);
             for (LinkResponse link : trackedLinks.links()) {
-                linksList.append(link.link()).append("\n");
+                linksList.append(link.url()).append("\n");
             }
             return new SendMessage(chatId, linksList.toString());
         }

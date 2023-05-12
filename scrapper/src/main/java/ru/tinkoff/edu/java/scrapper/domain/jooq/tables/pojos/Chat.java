@@ -45,6 +45,7 @@ public class Chat implements Serializable {
     /**
      * Getter for <code>CHAT.ID</code>.
      */
+    @jakarta.validation.constraints.NotNull
     @NotNull
     public Long getId() {
         return this.id;

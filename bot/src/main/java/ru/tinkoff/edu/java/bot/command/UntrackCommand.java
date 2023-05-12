@@ -42,15 +42,15 @@ public class UntrackCommand implements ICommand {
         } else {
             ListLinkResponse listLinks = scrapperClient.getTrackedLinks(chatId);
             for (LinkResponse link : listLinks.links()) {
-                if (link.link().equals(words[1])) {
+                if (link.url().equals(words[1])) {
 
                     scrapperClient.removeLinkFromTrack(String.valueOf(chatId), words[1]);
-                    return new SendMessage(chatId, String.format(SUCCESSFUL_MESSAGE, words[1]));
+                    return new SendMessage(chatId, SUCCESSFUL_MESSAGE);
                 }
 
 
             }
-            return new SendMessage(chatId, String.format(ERROR_MESSAGE, words[1]));
+            return new SendMessage(chatId, ERROR_MESSAGE);
         }}
 
         private String[] splitMessageIntoWords (String message){

@@ -8,6 +8,7 @@ import org.linkParser.result.GitHubParserResult;
 import org.linkParser.result.ParserResult;
 import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,19 +17,20 @@ import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Log4j2
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
+@ComponentScan(basePackages = {"ru.tinkoff.edu.java.scrapper.configuration"})
 public class LinkUpdaterScheduler {
     @Autowired
     private final LinkService linkService;
@@ -51,11 +53,11 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
-        Collection<LinkResponse> listLinks = linkService.getAllUncheckedLinks();
-        List<LinkUpdateRequest> listUpdater = new ArrayList<>();;
+        ListLinksResponse listLinks = linkService.getAllUncheckedLinks();
+        List<LinkUpdateRequest> listUpdater = new ArrayList<>();
 
-        for (LinkResponse link : listLinks) {
-            String url = link.link();
+        for (LinkResponse link : listLinks.links()) {
+            String url = link.url();
             ParserResult result = LinkParser.parseLink(url);
             if (result instanceof GitHubParserResult) {
                 Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;

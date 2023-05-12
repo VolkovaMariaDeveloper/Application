@@ -3,7 +3,6 @@ package test_container.jdbc;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
@@ -21,8 +20,6 @@ public class JdbcChatTest extends IntegrationEnvironment{
     private JdbcLinkRepository linkRepository;
     @Autowired
     private JdbcChatRepository jdbcChatRepository;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Transactional
     @Rollback
@@ -89,30 +86,18 @@ public class JdbcChatTest extends IntegrationEnvironment{
         long firstTgChat_id = 1L;
         String link = "https://github.com/VolkovaMariaDeveloper/Application";
         long secondTgChat_id = 2L;
+        int count = 2;
 
         List<Long> expectedChatIdList = List.of(firstTgChat_id, secondTgChat_id);
 
         jdbcChatRepository.add(firstTgChat_id);
-        linkRepository.add(firstTgChat_id, link);
+        linkRepository.add(firstTgChat_id, link, count);
         jdbcChatRepository.add(secondTgChat_id);
-        linkRepository.add(secondTgChat_id, link);
+        linkRepository.add(secondTgChat_id, link,count);
 
         List<Long> actualChatIdList = jdbcChatRepository.findAll(link);
-        //       String SQL_REQUEST_FROM_LINK = "SElECT * FROM links";
-//        try (Connection connection = DriverManager.getConnection(
-//                DB_CONTAINER.getJdbcUrl(),
-//                DB_CONTAINER.getUsername(),
-//                DB_CONTAINER.getPassword())) {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery(SQL_REQUEST_FROM_LINK);
 
-//            while(result.next()) {
-//                actualLinks.add(result.getString("url"));
-//            }
         assertThat(actualChatIdList).isEqualTo(expectedChatIdList);
 
-//        } catch (SQLException exception) {
-//            throw new RuntimeException(exception);
-//        }
     }
 }

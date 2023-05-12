@@ -4,7 +4,9 @@
 package ru.tinkoff.edu.java.scrapper.domain.jooq.tables;
 
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import javax.annotation.processing.Generated;
@@ -75,7 +77,7 @@ public class Links extends TableImpl<LinksRecord> {
     /**
      * The column <code>LINKS.LAST_CHECK_TIME</code>.
      */
-    public final TableField<LinksRecord, LocalDateTime> LAST_CHECK_TIME = createField(DSL.name("LAST_CHECK_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
+    public final TableField<LinksRecord, OffsetDateTime> LAST_CHECK_TIME = createField(DSL.name("LAST_CHECK_TIME"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     /**
      * The column <code>LINKS.COUNT</code>.
@@ -135,6 +137,12 @@ public class Links extends TableImpl<LinksRecord> {
 
     @Override
     @NotNull
+    public List<UniqueKey<LinksRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.CONSTRAINT_45);
+    }
+
+    @Override
+    @NotNull
     public Links as(String alias) {
         return new Links(DSL.name(alias), this);
     }
@@ -184,14 +192,14 @@ public class Links extends TableImpl<LinksRecord> {
 
     @Override
     @NotNull
-    public Row4<String, Long, LocalDateTime, Integer> fieldsRow() {
+    public Row4<String, Long, OffsetDateTime, Integer> fieldsRow() {
         return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super String, ? super Long, ? super LocalDateTime, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super String, ? super Long, ? super OffsetDateTime, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -199,7 +207,7 @@ public class Links extends TableImpl<LinksRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super Long, ? super LocalDateTime, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super Long, ? super OffsetDateTime, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

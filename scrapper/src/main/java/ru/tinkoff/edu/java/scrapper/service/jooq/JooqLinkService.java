@@ -2,50 +2,55 @@ package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.mappers.JooqMapper;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
 
-@Service
+
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
+    @Autowired
+    private CheckUpdater checkUpdater;
     @Autowired
     JooqLinkRepository jooqLinkRepository;
     @Override
     public LinkResponse add(long tgChatId, String url) {
-        long id = jooqLinkRepository.add(tgChatId, url);
-        int count = jooqLinkRepository.fillCount(url);
+        int count = checkUpdater.fillCount(url);
+        long id = jooqLinkRepository.add(tgChatId, url, count);
         return new LinkResponse(id, null, url, OffsetDateTime.now(),count);
     }
 
     @Override
     public LinkResponse remove(long tgChatId, String url) {
+        int count = checkUpdater.fillCount(url);
         long id = jooqLinkRepository.remove(tgChatId, url);
-        int count = jooqLinkRepository.fillCount(url);
+
         return new LinkResponse(id, null, url, OffsetDateTime.now(), count);
     }
 
     @Override
-    public ListLinksResponse listAll(long tgChatId) {
-        List<LinkResponse> collection = jooqLinkRepository.findAll(tgChatId);
-        return new ListLinksResponse(collection);
+    public ListLinksResponse findAllByChatId(long tgChatId) {
+        List<JooqLinkResponse> collection = jooqLinkRepository.findAll(tgChatId);
+        return JooqMapper.mapList(collection);
     }
 
     @Override
-    public Collection<LinkResponse> getAllLinks() {
-        List<LinkResponse> collection = jooqLinkRepository.getAllLinks();
-        return collection;
+    public ListLinksResponse getAllLinks() {
+        List<JooqLinkResponse> collection = jooqLinkRepository.getAllLinks();
+        return JooqMapper.mapList(collection);
     }
 
     @Override
-    public Collection<LinkResponse> getAllUncheckedLinks() {
-        return null;
+    public ListLinksResponse getAllUncheckedLinks() {
+        List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();//.getAllUncheckedLinks();
+        return JooqMapper.mapList(collection);
     }
 
 }

@@ -1,21 +1,14 @@
 package ru.tinkoff.edu.java.scrapper.repository.jooq;
 
-import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.linkParser.parser.LinkParser;
-import org.linkParser.result.GitHubParserResult;
-import org.linkParser.result.ParserResult;
-import org.linkParser.result.StackOverflowParserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
+import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.Tables;
+import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -27,16 +20,11 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.LINKS;
 public class JooqLinkRepository {
     private final DSLContext context;
     @Autowired
-    // @Qualifier("GitHubService")
-    private final GitHubClient gitHubClient;
-    @Autowired
-    //@Qualifier("StackOverflowService")
-    private final StackOverflowClient stackOverflowClient;
+    private ApplicationConfig config;
 
     @Transactional
-    public long add(long tgChatId, String link) {
-        LocalDateTime now = OffsetDateTime.now().toLocalDateTime();
-        int count = fillCount(link);
+    public long add(long tgChatId, String link, int count) {
+        OffsetDateTime now = OffsetDateTime.now();
 
         Long id = context.insertInto(LINKS)
                 .columns(LINKS.URL, LINKS.LAST_CHECK_TIME, LINKS.COUNT)
@@ -60,20 +48,6 @@ public class JooqLinkRepository {
         return id;
     }
 
-    public int fillCount(String url) {
-        ParserResult result = LinkParser.parseLink(url);
-        if (result instanceof GitHubParserResult) {
-            Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
-            String user = pair.getKey();
-            String repo = pair.getValue();
-            return gitHubClient.fetchRepository(user, repo).size();
-        } else if (result instanceof StackOverflowParserResult) {
-            String questionId = ((StackOverflowParserResult) result).idQuestion;
-            long id = Long.parseLong(questionId);
-            StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-            return list[0].answer_count();
-        } else return -1;
-    }
 
     public long remove(long tgChatId, String link) {
         return context.deleteFrom(CHAT_LINK).using(LINKS)
@@ -84,39 +58,30 @@ public class JooqLinkRepository {
                 .fetchSingleInto(Long.class);
     }
 
-    public List<LinkResponse> findAll(long tgChatId) {
+    public List<JooqLinkResponse> findAll(long tgChatId) {
         return context.select(LINKS.fields())
                 .from(LINKS)
                 .join(CHAT_LINK).on(CHAT_LINK.LINK_ID.eq(LINKS.ID))
                 .where(CHAT_LINK.CHAT_ID.eq(tgChatId))
-                .fetchInto(LinkResponse.class);
+                .fetchInto(JooqLinkResponse.class);
     }
 
     //Все сохраненные ссылки
-    public List<LinkResponse> getAllLinks() {
-        return context.select(LINKS.fields())
-                .select(LINKS)
-                .fetchInto(LinkResponse.class);
+    public List<JooqLinkResponse> getAllLinks() {
+        return context.select(Tables.LINKS.fields())
+                .from(Tables.LINKS)
+                .fetchInto(JooqLinkResponse.class);
+    }
+    public List<JooqLinkResponse> getAllUncheckedLinks() {
+        OffsetDateTime  checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
+        return context.select(Tables.LINKS.fields())
+                .from(Tables.LINKS)
+                .where(Tables.LINKS.LAST_CHECK_TIME.lessOrEqual(checkPeriod))
+                .fetchInto(JooqLinkResponse.class);
     }
 
-//Проблема со сравнением дат
-
-//    public List<LinkResponse> getAllUncheckedLinks() {
-//        String linksSql = """
-//                select id, url, last_check_time, count
-//                from links
-//                where (now()-last_check_time) > (50 * '1 sec'::interval)
-//                """;
-//        OffsetDateTime now = OffsetDateTime.now();
-//
-//        return context.select(LINKS.fields())
-//                .from(LINKS)
-//                .where((now.minus(LINKS.LAST_CHECK_TIME)).greaterThan(50 * '1 sec'::interval))           ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//                .fetchInto(LinkResponse.class);
-//    }
-
     public void updateLinks(int count, String link){
-        LocalDateTime now = OffsetDateTime.now().toLocalDateTime();
+        OffsetDateTime now = OffsetDateTime.now();
         context.update(LINKS)
                 .set(LINKS.COUNT,count)
                 .set(LINKS.LAST_CHECK_TIME,now)

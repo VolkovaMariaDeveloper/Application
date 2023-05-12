@@ -3,7 +3,7 @@
 --changeset Volkova:create_table_chat
 create table IF NOT EXISTS chat
 (
-    id BIGSERIAL PRIMARY KEY
+    id BIGINT PRIMARY KEY
 );
 
 --changeset Volkova:create_table_links
@@ -11,7 +11,7 @@ create table IF NOT EXISTS links
 (
     url VARCHAR(255) NOT NULL,
     id BIGSERIAL PRIMARY KEY,
-    last_check_time timestamp,
+    last_check_time TIMESTAMP WITH TIME ZONE,
     count INT,
     UNIQUE (url)
 
