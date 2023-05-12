@@ -34,15 +34,10 @@ public class JpaLinkService implements LinkService {
     @Transactional
     @Override
     public LinkResponse add(long tgChatId, String url) {
-//        List<Links> listAllLinks = jpaLinkRepository.findAll();
+
         Links link;
         boolean exist = jpaLinkRepository.existsByUrl(url);
-//        for (Links checkedLink:listAllLinks){
-//            if(checkedLink.getUrl().equals(url)){
-//                exist = true;
-//                break;
-//            }
-//        }
+
         if (!exist) {
             link = new Links();
             int count = checkUpdater.fillCount(url);
@@ -79,37 +74,7 @@ public class JpaLinkService implements LinkService {
         jpaLinkRepository.saveAndFlush(link);
         return JpaMapper.map(link);
     }
-//    public long remove(long tgChatId, String link) {
-//        String chat_linkSql = """
-//                delete from chat_link using links
-//                where id = link_id and chat_id = ? and url = ?
-//                returning id
-//                """;
-//        //удаление неотслеживаемой ссылки из таблицы всех ссылок
-//        String linksSql = """
-//                delete from links
-//                where id = ?
-//                """;
-//
-//        long id = jdbcTemplate.queryForObject(chat_linkSql, Long.class, tgChatId, link);
-//        if(getFollowers(id)==0){
-//            jdbcTemplate.update(linksSql, id);
-//        }
-//        return Objects.requireNonNull(id);
-//
-//
-//    }
-//
-//    public long getFollowers(long linkId) {
-//        String chat_linkSql = """
-//                select count (*)
-//                from chat_link
-//                where link_id = ?
-//                """;
-//        long countFollowers = jdbcTemplate.queryForObject(chat_linkSql, Long.class, linkId);
-//        return Objects.requireNonNull(countFollowers);
-//
-//    }
+
 
     @Transactional(readOnly = true)
     @Override
