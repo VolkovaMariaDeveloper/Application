@@ -67,7 +67,7 @@ public class JdbcChatTest extends IntegrationEnvironment {
     @Rollback
     void findAllByLinkTest() {
         long firstTgChatId = 1L;
-        String link = "https://github.com/VolkovaMariaDeveloper/Application";
+        String link = "https://github.com/catsloveme/telegram-bot";
         long secondTgChatId = 2L;
 
         List<Long> expectedChatIdList = List.of(firstTgChatId, secondTgChatId);

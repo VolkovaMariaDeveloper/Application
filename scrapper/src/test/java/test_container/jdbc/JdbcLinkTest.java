@@ -41,7 +41,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     @Test
     void addTest() {
         long tgChatId = 1L;
-        String link = "https://github.com/VolkovaMariaDeveloper/Application";
+        String link = "https://github.com/catsloveme/telegram-bot";
         jdbcTgChatService.register(tgChatId);
         LinkResponse response = jdbcLinkService.add(tgChatId, link);
         assertThat(response.url()).isEqualTo(link);
@@ -54,7 +54,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     void removeTest() {
         long firstTgChat_id = 1L;
         long secondTgChat_id = 2L;
-        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
+        String firstLink = "https://github.com/catsloveme/telegram-bot";
         String secondLink = "https://stackoverflow.com/questions/52653836";
         jdbcTgChatService.register(firstTgChat_id);
         jdbcTgChatService.register(secondTgChat_id);
@@ -75,7 +75,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     @Rollback
     void findAllByChatIdTest() {
         long firstTgChat_id = 1L;
-        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
+        String firstLink = "https://github.com/catsloveme/telegram-bot";
         String secondLink = "https://stackoverflow.com/questions/52653836";
 
         Set<String> actualLinks = new HashSet<>();
@@ -96,7 +96,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     @Rollback
     void getAllLinksTest() {
         long firstTgChat_id = 1L;
-        String firstLink = "https://github.com/VolkovaMariaDeveloper/Application";
+        String firstLink = "https://github.com/catsloveme/telegram-bot";
         String secondLink = "https://stackoverflow.com/questions/52653836";
         Set<String> actualLinks = new HashSet<>();
         Set<String> expectedLinks = Set.of(firstLink, secondLink);
