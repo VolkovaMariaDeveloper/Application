@@ -18,6 +18,7 @@ public interface JpaLinkRepository extends JpaRepository<Links, Long> {
     List<Links> getAllUncheckedLinks(OffsetDateTime checkPeriod);
 
     int removeByUrl(String url);
+    void deleteAll();
 
 
 }

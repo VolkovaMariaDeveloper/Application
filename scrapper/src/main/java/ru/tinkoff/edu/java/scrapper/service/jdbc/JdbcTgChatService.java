@@ -28,5 +28,7 @@ public class JdbcTgChatService implements TgChatService {
         return jdbcChatRepository.getAllChats();
     }
 
-
+    public void removeAll() {
+        jdbcChatRepository.removeAll();
+    }
 }

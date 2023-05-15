@@ -13,8 +13,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.CHAT_LINK;
-import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.LINKS;
+import static ru.tinkoff.edu.java.scrapper.domain.jooq.Tables.*;
+
 @Component
 @RequiredArgsConstructor
 public class JooqLinkRepository {
@@ -57,7 +57,14 @@ public class JooqLinkRepository {
                 .returningResult(LINKS.ID)
                 .fetchSingleInto(Long.class);
     }
-
+    public void removeAllLinks() {
+        context.deleteFrom(LINKS)
+                .execute();
+    }
+    public void removeAllChatLink() {
+        context.deleteFrom(CHAT_LINK)
+                .execute();
+    }
     public List<JooqLinkResponse> findAll(long tgChatId) {
         return context.select(LINKS.fields())
                 .from(LINKS)

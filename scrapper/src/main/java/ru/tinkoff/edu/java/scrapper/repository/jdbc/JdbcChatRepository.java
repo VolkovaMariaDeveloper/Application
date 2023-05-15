@@ -35,6 +35,12 @@ public class JdbcChatRepository {
                 """;
         jdbcTemplate.update(linksSql, tgChatId);
     }
+    public void removeAll() {
+        String linksSql = """
+                delete from chat 
+                """;
+        jdbcTemplate.update(linksSql);
+    }
 
     public List<Long> findAllByLink(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
         String sql = """

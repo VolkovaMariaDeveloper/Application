@@ -26,7 +26,10 @@ public class JooqChatRepository {
                 //.and(CHAT_LINK.CHAT_ID.eq(CHAT.ID))
                 .execute();
     }
-
+    public void removeAll() {
+        context.deleteFrom(CHAT)
+                .execute();
+    }
 
     public List<Long> findAllByLink(String link) {
         return context.select(CHAT_LINK.CHAT_ID)

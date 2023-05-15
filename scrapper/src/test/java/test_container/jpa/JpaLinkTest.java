@@ -1,6 +1,7 @@
 package test_container.jpa;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,11 @@ public class JpaLinkTest extends IntegrationEnvironment {
     JpaTgChatService jpaTgChatService;
     @Autowired
     JpaLinkService jpaLinkService;
-
+    @BeforeEach
+    void cleanDB() {
+        jpaTgChatService.removeAll();
+        jpaLinkService.removeAll();
+    }
     @Transactional
     @Rollback
     @Test

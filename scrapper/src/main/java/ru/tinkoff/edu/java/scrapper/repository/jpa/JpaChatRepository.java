@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface JpaChatRepository extends JpaRepository<Chat, Long> {
     @NotNull List<Chat> findAll();
+    void deleteAll();
 }

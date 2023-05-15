@@ -100,4 +100,8 @@ public class JpaLinkService implements LinkService {
         List<Links> links = jpaLinkRepository.getAllUncheckedLinks(checkPeriod);
         return JpaMapper.mapList(links);
     }
+
+    public void removeAll() {
+        jpaLinkRepository.deleteAll();
+    }
 }

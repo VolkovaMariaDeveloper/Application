@@ -56,4 +56,7 @@ public class JpaTgChatService implements TgChatService {
         }
         return ids;
     }
+    public void removeAll() {
+        jpaChatRepository.deleteAll();
+    }
 }

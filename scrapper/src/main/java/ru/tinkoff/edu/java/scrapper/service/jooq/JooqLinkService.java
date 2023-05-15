@@ -52,5 +52,8 @@ public class JooqLinkService implements LinkService {
         List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();//.getAllUncheckedLinks();
         return JooqMapper.mapList(collection);
     }
-
+    public void removeAll() {
+       jooqLinkRepository.removeAllLinks();
+        jooqLinkRepository.removeAllChatLink();
+    }
 }

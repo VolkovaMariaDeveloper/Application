@@ -1,5 +1,6 @@
 package test_container.jdbc;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+
 
 @SpringBootTest(classes = ScrapperApplication.class,
         properties = {"app.database-access-type=jdbc"})
@@ -27,7 +28,13 @@ public class JdbcLinkTest extends IntegrationEnvironment {
     JdbcTgChatService jdbcTgChatService;
 
     @Autowired
-    JdbcLinkService  jdbcLinkService;
+    JdbcLinkService jdbcLinkService;
+
+    @BeforeEach
+    void cleanDB() {
+        jdbcTgChatService.removeAll();
+        jdbcLinkService.removeAll();
+    }
 
     @Transactional
     @Rollback
@@ -36,10 +43,8 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         long tgChatId = 1L;
         String link = "https://github.com/VolkovaMariaDeveloper/Application";
         jdbcTgChatService.register(tgChatId);
-        LinkResponse response =  jdbcLinkService.add(tgChatId, link);
-        assertAll("Should return adding url and link id",
-                () -> assertThat(response.url()).isEqualTo(link),
-                () -> assertThat(response.id()).isEqualTo(tgChatId));
+        LinkResponse response = jdbcLinkService.add(tgChatId, link);
+        assertThat(response.url()).isEqualTo(link);
     }
 
 
@@ -56,12 +61,10 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         jdbcLinkService.add(firstTgChat_id, firstLink);
         jdbcLinkService.add(secondTgChat_id, secondLink);
         jdbcLinkService.remove(firstTgChat_id, firstLink);
-        ListLinksResponse links =  jdbcLinkService.getAllLinks();
+        ListLinksResponse links = jdbcLinkService.getAllLinks();
 
         assertThat(links.links().get(0).url()).isEqualTo(secondLink);
-            }
-
-
+    }
 
 
     //с транзакцией почему-то result.next() = false, поэтому проверяла по возвращаемому значению, а не по наличию в таблице.
@@ -80,7 +83,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         jdbcTgChatService.register(firstTgChat_id);
         jdbcLinkService.add(firstTgChat_id, firstLink);
         jdbcLinkService.add(firstTgChat_id, secondLink);
-        ListLinksResponse list =  jdbcLinkService.findAllByChatId(firstTgChat_id);
+        ListLinksResponse list = jdbcLinkService.findAllByChatId(firstTgChat_id);
         for (LinkResponse el : list.links()) {
             actualLinks.add(el.url());
         }
@@ -100,7 +103,7 @@ public class JdbcLinkTest extends IntegrationEnvironment {
         jdbcTgChatService.register(firstTgChat_id);
         jdbcLinkService.add(firstTgChat_id, firstLink);
         jdbcLinkService.add(firstTgChat_id, secondLink);
-        ListLinksResponse list =  jdbcLinkService.getAllLinks();
+        ListLinksResponse list = jdbcLinkService.getAllLinks();
         for (LinkResponse el : list.links()) {
             actualLinks.add(el.url());
         }

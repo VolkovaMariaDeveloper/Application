@@ -28,5 +28,8 @@ public class JooqTgChatService implements TgChatService {
     public List<Long> getAllChats() {
         return jooqChatRepository.getAllChats();
     }
+    public void removeAll() {
+        jooqChatRepository.removeAll();
+    }
 
 }

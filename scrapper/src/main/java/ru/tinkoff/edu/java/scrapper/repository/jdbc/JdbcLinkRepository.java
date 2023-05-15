@@ -181,5 +181,15 @@ public class JdbcLinkRepository {
         jdbcTemplate.update(chat_linkSql, count, link);
 
     }
+    public void removeAll() {
+        String linksSql = """
+                delete from links 
+                """;
+        String chatLinksSql = """
+                delete from chat_link 
+                """;
+        jdbcTemplate.update(linksSql);
+        jdbcTemplate.update(chatLinksSql);
+    }
 
 }

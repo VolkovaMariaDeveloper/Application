@@ -1,5 +1,6 @@
 package test_container.jdbc;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,12 @@ public class JdbcChatTest extends IntegrationEnvironment {
     @Autowired
     JdbcLinkService jdbcLinkService;
 
+    @BeforeEach
+    void cleanDB() {
+        jdbcTgChatService.removeAll();
+        jdbcLinkService.removeAll();
+    }
+
     @Transactional
     @Rollback
     @Test
@@ -31,10 +38,10 @@ public class JdbcChatTest extends IntegrationEnvironment {
         long secondTgChatId = 2L;
         jdbcTgChatService.register(firstTgChatId);
         jdbcTgChatService.register(secondTgChatId);
-        List <Long> expectedList = List.of(firstTgChatId,secondTgChatId);
+        List<Long> expectedList = List.of(firstTgChatId, secondTgChatId);
         List<Long> result = jdbcTgChatService.getAllChats();
 
-               assertThat(result).isEqualTo(expectedList);
+        assertThat(result).isEqualTo(expectedList);
     }
 
     @Test
@@ -47,7 +54,7 @@ public class JdbcChatTest extends IntegrationEnvironment {
         jdbcTgChatService.register(firstTgChatId);
         jdbcTgChatService.register(secondTgChatId);
         jdbcTgChatService.unregister(secondTgChatId);
-        List <Long> expectedList = List.of(firstTgChatId,secondTgChatId);
+        List<Long> expectedList = List.of(firstTgChatId, secondTgChatId);
         List<Long> result = jdbcTgChatService.getAllChats();
 
         assertThat(result).isEqualTo(expectedList);

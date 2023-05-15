@@ -1,5 +1,6 @@
 package test_container.jooq;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +55,11 @@ public class JooqLinkTest  extends IntegrationEnvironment {
         LinkResponse response = listResponse.links().get(0);
         assertThat(response.url()).isEqualTo(url2);
     }
-
+    @BeforeEach
+    void cleanDB() {
+        jooqTgChatService.removeAll();
+        jooqLinkService.removeAll();
+    }
 
     @Transactional
     @Rollback

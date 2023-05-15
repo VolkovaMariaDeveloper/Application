@@ -51,4 +51,8 @@ public class JdbcLinkService implements LinkService {
         List<LinkResponse> collection = linkRepository.getAllUncheckedLinks();
         return new ListLinksResponse(collection);
     }
+
+    public void removeAll() {
+         linkRepository.removeAll();
+    }
 }
