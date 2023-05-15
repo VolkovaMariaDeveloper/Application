@@ -51,4 +51,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Check style
-        uses: mvn -pl bot -am checkstyle:check.
+        run: mvn -pl bot -am checkstyle:check.

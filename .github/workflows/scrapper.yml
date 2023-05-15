@@ -54,4 +54,4 @@ jobs:
            distribution: 'temurin'
            cache: maven
        - name: Check style
-         uses: mvn -pl scrapper -am checkstyle:check.
+         run: mvn -pl scrapper -am checkstyle:check.
