@@ -32,7 +32,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN_GITHUB
+          password: ${{ secrets.TOKEN_GITHUB}}
 
       - name: Build Docker image
         run: docker build -f bot/Dockerfile --force-rm -t ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest .
@@ -51,4 +51,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Check style
-        run: mvn -pl bot -am checkstyle:check.
+        run: mvn -pl bot -am checkstyle:check
