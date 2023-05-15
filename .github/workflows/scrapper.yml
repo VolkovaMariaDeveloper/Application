@@ -39,7 +39,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build Docker image
-        run: docker build -f bot/Dockerfile --force-rm -t ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest .
+        run: docker build -f scrapper/Dockerfile --force-rm -t ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest .
 
       - name: Push Docker image to GitHub Container Registry
         run: docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
