@@ -37,7 +37,8 @@ public class ListCommand implements ICommand {
         ListLinkResponse trackedLinks = scrapperClient.getTrackedLinks(chatId);
 
         //TODO вернуть список строк
-        if (trackedLinks.links().isEmpty()) {
+//        if (trackedLinks.links().isEmpty()) {
+        if (trackedLinks==null) {
             return new SendMessage(chatId, ERROR_MESSAGE);
         } else {
             StringBuilder linksList = new StringBuilder(SUCCESSFUL_MESSAGE);
