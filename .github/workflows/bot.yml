@@ -35,8 +35,8 @@ jobs:
           password: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Build Docker image
-        run: docker build -f bot/Dockerfile --force-rm -t ${{ env.REGISTRY }}/volkova/${{ env.IMAGE_NAME }}:latest .
+        run: docker build -f bot/Dockerfile --force-rm -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:latest .
 
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ${{ env.REGISTRY }}/volkova/${{ env.IMAGE_NAME }}:latest
+        run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:latest
 
