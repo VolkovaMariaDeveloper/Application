@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Build Docker image
-        run: docker build -f bot/Dockerfile -t ${{ env.REGISTRY }}/${{ github.repository }} .
+        run: docker build -f bot/Dockerfile --force-rm -t bot .
 
       - name: Push Docker image to GitHub Container Registry
         run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
