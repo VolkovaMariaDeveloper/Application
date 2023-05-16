@@ -1,14 +1,24 @@
 package ru.tinkoff.edu.java.bot.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-import ru.tinkoff.edu.java.bot.command.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.*;
+import ru.tinkoff.edu.java.bot.command.HelpCommand;
+import ru.tinkoff.edu.java.bot.command.ICommand;
+import ru.tinkoff.edu.java.bot.command.ListCommand;
+import ru.tinkoff.edu.java.bot.command.StartCommand;
+import ru.tinkoff.edu.java.bot.command.TrackCommand;
+import ru.tinkoff.edu.java.bot.command.UnknownCommand;
+import ru.tinkoff.edu.java.bot.command.UntrackCommand;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.HELP;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.LIST;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.START;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.TRACK;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.UNTRACK;
 
 @Component
 //@RequiredArgsConstructor

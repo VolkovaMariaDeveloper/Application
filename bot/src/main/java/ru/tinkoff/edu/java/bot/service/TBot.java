@@ -5,12 +5,11 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-
-import java.util.List;
 
 @Component
 public class TBot extends TelegramLongPollingBot implements IBot {

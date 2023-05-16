@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.bot.client;
 
+import java.util.Collections;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -8,9 +10,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.bot.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
-
-import java.util.Collections;
-import java.util.Map;
 
 @Log4j2
 @Component
