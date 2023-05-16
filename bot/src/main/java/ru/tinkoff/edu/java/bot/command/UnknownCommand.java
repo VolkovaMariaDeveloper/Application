@@ -20,6 +20,6 @@ public class UnknownCommand implements ICommand {
     public SendMessage handle(Update update) {
         Message message = update.message();
         long chatId = message.chat().id();
-        return new SendMessage(chatId,description());
+        return new SendMessage(chatId, description());
     }
 }

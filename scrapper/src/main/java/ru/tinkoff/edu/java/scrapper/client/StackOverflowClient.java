@@ -16,13 +16,12 @@ public class StackOverflowClient {
 
     public StackOverflowResponse fetchQuestion(long idQuestion) {
         return stackOverflowClient.get()
-                .uri(uri -> uri.path("/questions/{id}")
-                        .queryParam("site", "stackoverflow")
-                        .build(idQuestion))
-                .retrieve()
-                .bodyToMono(StackOverflowResponse.class)
-                .block();
+            .uri(uri -> uri.path("/questions/{id}")
+                .queryParam("site", "stackoverflow")
+                .build(idQuestion))
+            .retrieve()
+            .bodyToMono(StackOverflowResponse.class)
+            .block();
     }
-
 
 }

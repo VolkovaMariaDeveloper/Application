@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowResponse;
+
 @Component
 @RequiredArgsConstructor
 public class CheckUpdater {
@@ -18,7 +19,8 @@ public class CheckUpdater {
     private final GitHubClient gitHubClient;
     @Autowired
     private final StackOverflowClient stackOverflowClient;
-    public  int fillCount(String url) {
+
+    public int fillCount(String url) {
         ParserResult result = LinkParser.parseLink(url);
         if (result instanceof GitHubParserResult) {
             Pair<String, String> pair = ((GitHubParserResult) result).pairUserRepository;
@@ -29,7 +31,9 @@ public class CheckUpdater {
             String questionId = ((StackOverflowParserResult) result).idQuestion;
             long id = Long.parseLong(questionId);
             StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-            return list[0].answer_count();
-        } else return -1;
+            return list[0].answerCount();
+        } else {
+            return -1;
+        }
     }
 }

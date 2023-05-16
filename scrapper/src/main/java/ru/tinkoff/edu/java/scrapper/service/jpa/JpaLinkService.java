@@ -1,5 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +18,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.mappers.JpaMapper;
-
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 
 @RequiredArgsConstructor
 public class JpaLinkService implements LinkService {
@@ -37,24 +35,18 @@ public class JpaLinkService implements LinkService {
     @Transactional
     @Override
     public LinkResponse add(long tgChatId, String url) {
-        List<Links> listAllLinks = jpaLinkRepository.findAll();
+
         Links link;
-        boolean exist = false;
-        for (Links checkedLink:listAllLinks){
-            if(checkedLink.getUrl().equals(url)){
-                exist = true;
-                break;
-            }
-        }
-        if(!exist) {
+        boolean exist = jpaLinkRepository.existsByUrl(url);
+
+        if (!exist) {
             link = new Links();
             int count = checkUpdater.fillCount(url);
 
             link.setUrl(url);
             link.setCount(count);
             link.setSubscribers(new HashSet<>());
-        }
-        else{
+        } else {
             link = jpaLinkRepository.findByUrl(url);
         }
         Chat chat = jpaChatRepository.findById(tgChatId).orElseThrow();
@@ -74,11 +66,16 @@ public class JpaLinkService implements LinkService {
         Chat chat = jpaChatRepository.findById(tgChatId).orElse(null);
         assert chat != null;
         Set<Links> trackedLinks = chat.getTrackedLinks();
-
         trackedLinks.remove(link);
+        link.getSubscribers().remove(chat);
+        if (link.getSubscribers().isEmpty()) {
+            jpaLinkRepository.removeByUrl(url);
+        }
         jpaChatRepository.saveAndFlush(chat);
+        jpaLinkRepository.saveAndFlush(link);
         return JpaMapper.map(link);
     }
+
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse findAllByChatId(long tgChatId) {
@@ -95,11 +92,16 @@ public class JpaLinkService implements LinkService {
         return JpaMapper.mapList(links);
 
     }
+
     @Transactional(readOnly = true)
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
         OffsetDateTime checkPeriod = OffsetDateTime.now().minusHours(config.checkPeriodHours());
         List<Links> links = jpaLinkRepository.getAllUncheckedLinks(checkPeriod);
         return JpaMapper.mapList(links);
+    }
+
+    public void removeAll() {
+        jpaLinkRepository.deleteAll();
     }
 }

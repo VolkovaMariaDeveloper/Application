@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface TgChatService {
     void register(long tgChatId);
+
     void unregister(long tgChatId);
-    List<Long> getChatIdsForLink(String link);
+
+    List<Long> getAllChatByLink(String link);
 }

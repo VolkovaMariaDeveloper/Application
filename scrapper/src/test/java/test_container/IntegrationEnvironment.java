@@ -1,4 +1,4 @@
-package test_container.jdbc;
+package test_container;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;

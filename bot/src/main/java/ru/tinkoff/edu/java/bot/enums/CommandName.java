@@ -3,7 +3,7 @@ package ru.tinkoff.edu.java.bot.enums;
 public enum CommandName {
 
     START("/start"),
-    HELP( "/help"),
+    HELP("/help"),
     TRACK("/track"),
     UNTRACK("/untrack"),
     LIST("/list");
@@ -18,7 +18,5 @@ public enum CommandName {
     public String toString() {
         return this.cmd;
     }
-    public boolean equals(String cmd){
-        return this.toString().equals(cmd);
-    }
+
 }

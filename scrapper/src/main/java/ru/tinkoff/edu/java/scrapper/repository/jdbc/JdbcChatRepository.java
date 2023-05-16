@@ -1,12 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Log4j2
 //@Repository("chatRepository")
@@ -30,27 +29,41 @@ public class JdbcChatRepository {
 
     public void remove(long tgChatId) {
         String linksSql = """
-                delete from chat using chat_link
-                where id = ? and chat_id = id
-                """;
+            delete from chat using chat_link
+            where id = ? and chat_id = id
+            """;
         jdbcTemplate.update(linksSql, tgChatId);
     }
 
-    public List<Long> findAll(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
+    public void removeAll() {
+        String linksSql = """
+            delete from chat
+            """;
+        jdbcTemplate.update(linksSql);
+    }
+
+    public List<Long> findAllByLink(String link) {
         String sql = """
-                select chat_id from chat_link
-                join links on id = link_id 
-                where url = ?              
-                """;
+            select chat_id from chat_link
+            join links on id = link_id
+            where url = ?
+            """;
         return jdbcTemplate.query(
-                sql,
-                (rs, rn) -> {
-                    long id = rs.getLong("chat_id");
-                    return id;
-                },
-                link
+            sql,
+            (rs, rn) -> rs.getLong("chat_id"),
+            link
         );
     }
 
+    public List<Long> getAllChats() {
+        String sql = """
+            select id from chat
+
+            """;
+        return jdbcTemplate.query(
+            sql,
+            (rs, rn) -> rs.getLong("id")
+        );
+    }
 
 }

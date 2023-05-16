@@ -9,8 +9,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
     private JdbcLinkRepository linkRepository;
 
     @Override
-    public int update(int count, String link) {
+    public void update(int count, String link) {
         linkRepository.updateLinks(count, link);
-        return 0;
     }
 }

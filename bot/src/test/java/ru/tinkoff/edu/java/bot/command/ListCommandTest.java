@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.List;
+import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +17,8 @@ import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 import ru.tinkoff.edu.java.bot.service.CommandContainer;
-
-import java.util.List;
-import java.util.Random;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-
 
 public class ListCommandTest {
     AutoCloseable openMock;
@@ -37,15 +34,16 @@ public class ListCommandTest {
     ListCommand listCommand;
     @InjectMocks
     CommandContainer container;
+
     @BeforeEach
     void setup() {
         openMock = MockitoAnnotations.openMocks(this);
     }
+
     @AfterEach
     void tearDown() throws Exception {
         openMock.close();
     }
-
 
     @Test
     void test_listCommands_is_empty() {
@@ -63,20 +61,21 @@ public class ListCommandTest {
     }
 
     @Test
-    void test_listCommands(){
+    void test_listCommands() {
         long id = new Random().nextLong();
         when(chat.id()).thenReturn(id);
         when(message.chat()).thenReturn(chat);
 
-        LinkResponse firstUrl = new LinkResponse(0, null,"https://github.com/VolkovaMariaDeveloper/Application/",null,0);
+        LinkResponse firstUrl =
+            new LinkResponse(0, null, "https://github.com/VolkovaMariaDeveloper/Application/", null, 0);
         ListLinkResponse listLinkResponse = new ListLinkResponse(List.of(firstUrl));
 
         when(scrapperClient.getTrackedLinks(id)).thenReturn(listLinkResponse);
         SendMessage request = listCommand.handle(update);
 
         assertThat(request.getParameters().get("text")).isEqualTo("""
-                Вот ссылки, на которые вы подписаны:\s
-                https://github.com/VolkovaMariaDeveloper/Application/
-                """);
+            Вот ссылки, на которые вы подписаны:\s
+            https://github.com/VolkovaMariaDeveloper/Application/
+            """);
     }
 }

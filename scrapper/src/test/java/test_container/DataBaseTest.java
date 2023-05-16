@@ -1,4 +1,4 @@
-package test_container.jdbc;
+package test_container;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

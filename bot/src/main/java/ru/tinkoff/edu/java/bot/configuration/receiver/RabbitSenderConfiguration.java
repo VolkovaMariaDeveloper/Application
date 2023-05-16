@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.bot.service.TBot;
-import ru.tinkoff.edu.java.bot.service.update.ScrapperQueueListener;
 import ru.tinkoff.edu.java.bot.service.update.ReceiverUpdates;
+import ru.tinkoff.edu.java.bot.service.update.ScrapperQueueListener;
 
 @RequiredArgsConstructor
 @Configuration
@@ -14,7 +14,7 @@ import ru.tinkoff.edu.java.bot.service.update.ReceiverUpdates;
 public class RabbitSenderConfiguration {
 
     @Bean
-    public ReceiverUpdates receiveUpdates(TBot bot){
+    public ReceiverUpdates receiveUpdates(TBot bot) {
         return new ScrapperQueueListener(bot);
     }
 }

@@ -2,7 +2,9 @@ package org.linkParser.parser;
 
 import org.linkParser.result.ParserResult;
 
-public class LinkParser {
+public final class LinkParser {
+    private LinkParser() {
+    }
 
     public static ParserResult parseLink(String link) {
 
@@ -11,7 +13,6 @@ public class LinkParser {
         return gitHubParser.parse(link);
 
     }
-
 
 }
 

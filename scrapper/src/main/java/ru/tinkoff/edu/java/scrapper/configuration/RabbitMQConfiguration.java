@@ -1,6 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
     private final String exchangeName;
     private final String queueName;
-    private final String DEAD_LETTER_EX = "x-dead-letter-exchange";
-    private final String DLQ = ".dlq";
+    private static final String DEAD_LETTER_EX = "x-dead-letter-exchange";
+    private static final String DLQ = ".dlq";
 
     public RabbitMQConfiguration(ApplicationConfig config) {
         this.exchangeName = config.exchangeName();
@@ -28,8 +32,8 @@ public class RabbitMQConfiguration {
     @Bean
     public Queue queue() {
         return QueueBuilder.durable(queueName)
-                .withArgument(DEAD_LETTER_EX, queueName + DLQ)
-                .build();
+            .withArgument(DEAD_LETTER_EX, queueName + DLQ)
+            .build();
     }
 
     @Bean

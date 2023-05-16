@@ -5,7 +5,6 @@ public enum AccessType {
     JPA("jpa"),
     JOOQ("jooq");
 
-
     AccessType(String implementation) {
     }
 }

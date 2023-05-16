@@ -15,8 +15,9 @@ import ru.tinkoff.edu.java.scrapper.service.sender.UpdateMessageSender;
 public class RabbitSenderConfiguration {
     private final RabbitTemplate rabbitTemplate;
     private final Queue queue;
+
     @Bean
-    public UpdateMessageSender updateMessageSender(){
+    public UpdateMessageSender updateMessageSender() {
         return new ScrapperQueueProducer(rabbitTemplate, queue);
     }
 }

@@ -17,10 +17,10 @@ public class BotClient {
 
     public void updateLink(LinkUpdateRequest linkUpdateRequest) {
         botWebClient.post()
-                .uri("/updates")
-                .body(BodyInserters.fromValue(linkUpdateRequest))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+            .uri("/updates")
+            .body(BodyInserters.fromValue(linkUpdateRequest))
+            .retrieve()
+            .bodyToMono(Void.class)
+            .block();
     }
 }

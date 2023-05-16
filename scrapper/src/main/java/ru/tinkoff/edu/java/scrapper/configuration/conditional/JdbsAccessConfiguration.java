@@ -14,17 +14,17 @@ import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcTgChatService;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 public class JdbsAccessConfiguration {
     @Bean("jdbsLinkService")
-    public LinkService linkService(){
+    public LinkService linkService() {
         return new JdbcLinkService();
     }
 
     @Bean("jdbsLinkUpdater")
-    public LinkUpdater linkUpdater(){
+    public LinkUpdater linkUpdater() {
         return new JdbcLinkUpdater();
     }
 
     @Bean("jdbsTgChatService")
-    public TgChatService tgChatService(){
+    public TgChatService tgChatService() {
         return new JdbcTgChatService();
     }
 }

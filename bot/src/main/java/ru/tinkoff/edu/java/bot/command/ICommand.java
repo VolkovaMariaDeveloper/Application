@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 public interface ICommand {
-    String  command();
+    String command();
 
     String description();
 

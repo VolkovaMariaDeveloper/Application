@@ -6,7 +6,10 @@ import org.linkParser.result.ParserResult;
 
 public class GitHubParser implements Parser {
 
-    private Parser nextParser;
+    private final Parser nextParser;
+    private static final int ALLOWABLE_LENGTH = 5;
+    private static final int USER_INDEX = 3;
+    private static final int REPO_INDEX = 4;
 
     public GitHubParser(Parser nextParser) {
         this.nextParser = nextParser;
@@ -16,9 +19,12 @@ public class GitHubParser implements Parser {
     public ParserResult parse(String link) {
         if (checkLinkGitHub(link)) {
             String[] array = link.split("/");
-            Pair pairUserRepository = new Pair<>(array[3], array[4]);
 
-            return new GitHubParserResult(pairUserRepository);
+            if (array.length >= ALLOWABLE_LENGTH) {
+                Pair<String, String> pairUserRepository = new Pair<>(array[USER_INDEX], array[REPO_INDEX]);
+
+                return new GitHubParserResult(pairUserRepository);
+            }
         } else if (nextParser != null) {
             return nextParser.parse(link);
         }
