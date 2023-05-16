@@ -19,7 +19,4 @@ public enum CommandName {
         return this.cmd;
     }
 
-    public boolean equals(String cmd) {
-        return this.toString().equals(cmd);
-    }
 }

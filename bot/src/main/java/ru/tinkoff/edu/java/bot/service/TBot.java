@@ -5,21 +5,23 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
+import java.util.List;
+
 @Component
 public class TBot extends TelegramLongPollingBot implements IBot {
-    private final TelegramBot bot = new TelegramBot(System.getenv("TOKEN"));
+    private static final String TOKEN = "TOKEN";
+    private final TelegramBot bot = new TelegramBot(System.getenv(TOKEN));
     @Autowired
     private final CommandContainer commandContainer;
-    private final String BOT_NAME = "NewsBot";
+    private static final String BOT_NAME = "NewsBot";
 
     public TBot(ScrapperClient scrapperClient) {
-        super(System.getenv("TOKEN"));
+        super(System.getenv(TOKEN));
         this.commandContainer = new CommandContainer(scrapperClient);
     }
 
@@ -61,8 +63,6 @@ public class TBot extends TelegramLongPollingBot implements IBot {
 
     @Override
     public void onUpdateReceived(org.telegram.telegrambots.meta.api.objects.Update update) {
-        if (!update.hasMessage()) {
-        }
     }
 
     @Override

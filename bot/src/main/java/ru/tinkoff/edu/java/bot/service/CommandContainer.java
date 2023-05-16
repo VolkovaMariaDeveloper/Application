@@ -1,24 +1,14 @@
 package ru.tinkoff.edu.java.bot.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-import ru.tinkoff.edu.java.bot.command.HelpCommand;
-import ru.tinkoff.edu.java.bot.command.ICommand;
-import ru.tinkoff.edu.java.bot.command.ListCommand;
-import ru.tinkoff.edu.java.bot.command.StartCommand;
-import ru.tinkoff.edu.java.bot.command.TrackCommand;
-import ru.tinkoff.edu.java.bot.command.UnknownCommand;
-import ru.tinkoff.edu.java.bot.command.UntrackCommand;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.HELP;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.LIST;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.START;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.TRACK;
-import static ru.tinkoff.edu.java.bot.enums.CommandName.UNTRACK;
+import ru.tinkoff.edu.java.bot.command.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import static ru.tinkoff.edu.java.bot.enums.CommandName.*;
 
 @Component
 //@RequiredArgsConstructor
@@ -32,15 +22,20 @@ public class CommandContainer implements ICommandContainer {
     public CommandContainer(ScrapperClient scrapperClient) {
         commandMap = new HashMap<>();
         ICommand command;
-        commandMap.put(START.toString(), command = new StartCommand(scrapperClient));
+        command = new StartCommand(scrapperClient);
+        commandMap.put(START.toString(), command);
         listCommand.add(command.toApiCommand());
-        commandMap.put(HELP.toString(), command = new HelpCommand());
+        command = new HelpCommand();
+        commandMap.put(HELP.toString(), command);
         listCommand.add(command.toApiCommand());
-        commandMap.put(TRACK.toString(), command = new TrackCommand(scrapperClient));
+        command = new TrackCommand(scrapperClient);
+        commandMap.put(TRACK.toString(), command);
         listCommand.add(command.toApiCommand());
-        commandMap.put(UNTRACK.toString(), command = new UntrackCommand(scrapperClient));
+        command = new UntrackCommand(scrapperClient);
+        commandMap.put(UNTRACK.toString(), command);
         listCommand.add(command.toApiCommand());
-        commandMap.put(LIST.toString(), command = new ListCommand(scrapperClient));
+        command = new ListCommand(scrapperClient);
+        commandMap.put(LIST.toString(), command);
         listCommand.add(command.toApiCommand());
         unknownCommand = new UnknownCommand();
 

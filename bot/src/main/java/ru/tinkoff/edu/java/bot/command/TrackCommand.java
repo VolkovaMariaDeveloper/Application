@@ -13,7 +13,7 @@ public class TrackCommand implements ICommand {
     public static final String ERROR_MESSAGE =
         "Ссылка не добавлена в список отслеживаемых ссылок, введите ее сразу после команды /track";
     public static final String EXISTING_LINK_MESSAGE = "У Вас проблемы с памятью, ссылка %s и так уже отслеживается!";
-    private final String SUCCESSFUL_MESSAGE =
+    private static final String SUCCESSFUL_MESSAGE =
         "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
     @Autowired
     private final ScrapperClient scrapperClient;

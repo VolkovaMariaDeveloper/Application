@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HelpCommand implements ICommand {
 
-    private final String HELP_MESSAGE = """
+    private static final String HELP_MESSAGE = """
         NewsBot поможет вам отслеживать изменения в репозиториях GitHub и вопросах на StackOverflow.
 
         Для этого необходимо ввести команду /track и ссылку, на обновления которой вы хотите подписаться.

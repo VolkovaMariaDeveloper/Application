@@ -15,7 +15,7 @@ public class UntrackCommand implements ICommand {
         "Ссылка не удалена из списка отслеживаемых ссылок, введите ее сразу после команды /untrack";
     @Autowired
     private final ScrapperClient scrapperClient;
-    private final String SUCCESSFUL_MESSAGE =
+    private static final String SUCCESSFUL_MESSAGE =
         "Вы успешно отписались от ссылки, теперь вы не будете получать уведомления об изменениях";
 
     public UntrackCommand(ScrapperClient scrapperClient) {

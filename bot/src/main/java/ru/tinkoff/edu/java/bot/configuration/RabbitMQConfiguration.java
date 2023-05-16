@@ -1,12 +1,6 @@
 package ru.tinkoff.edu.java.bot.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.ClassMapper;
 import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -14,14 +8,16 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.bot.dto.LinkUpdateRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class RabbitMQConfiguration {
     private final String exchangeName;
     private final String queueName;
-    private final String DEAD_LETTER_EX = "x-dead-letter-exchange";
-    private final String DLQ = ".dlq";
-    private final String DLX = ".dlx";
+    private static final String DEAD_LETTER_EX = "x-dead-letter-exchange";
+    private static final String DLQ = ".dlq";
+    private static final String DLX = ".dlx";
 
     public RabbitMQConfiguration(ApplicationConfig config) {
         this.exchangeName = config.exchangeName();

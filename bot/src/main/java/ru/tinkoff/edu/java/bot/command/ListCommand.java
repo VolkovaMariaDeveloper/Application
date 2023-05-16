@@ -15,7 +15,7 @@ public class ListCommand implements ICommand {
     public static final String ERROR_MESSAGE =
         "Список отслеживаемых ссылок пуст, для получения списка доступных команд введите /help";
     private final ScrapperClient scrapperClient;
-    private final String SUCCESSFUL_MESSAGE = "Вот ссылки, на которые вы подписаны: \n";
+    private static final String SUCCESSFUL_MESSAGE = "Вот ссылки, на которые вы подписаны: \n";
 
     @Autowired
     public ListCommand(ScrapperClient scrapperClient) {
