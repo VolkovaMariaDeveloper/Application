@@ -2,8 +2,12 @@ app:
   test: 4
   scheduler:
     interval: 1500000
-  database-access-type: jooq
-  checkPeriodHours: 2
+  database-access-type: jdbc
+  checkPeriodHours: 0
+  exchangeName: scrapperExchange
+  queueName: scrapperQueue
+  useQueue: true
+
 
 springdoc:
   swagger-ui:
@@ -23,6 +27,11 @@ spring:
   liquibase:
     changeLog: "classpath: /migrations/master.yaml"
     enabled: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
   datasource:
     url:  jdbc:postgresql://localhost:5432/scrapper

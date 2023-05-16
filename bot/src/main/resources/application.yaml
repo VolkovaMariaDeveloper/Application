@@ -1,5 +1,8 @@
 app:
   test: 5
+  exchangeName: scrapperExchange
+  queueName: scrapperQueue
+  useQueue: true
 
 springdoc:
   swagger-ui:
@@ -15,7 +18,12 @@ scrapper:
 
 spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/scrapper
+    url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
