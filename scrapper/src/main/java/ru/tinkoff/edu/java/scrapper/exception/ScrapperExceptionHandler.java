@@ -6,13 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class ScrapperExceptionHandler extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler(InvalidRequestParametersException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidRequestException(InvalidRequestParametersException exception) {
 

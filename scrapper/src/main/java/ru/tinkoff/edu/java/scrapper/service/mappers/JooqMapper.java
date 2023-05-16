@@ -1,11 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.service.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
 import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class JooqMapper {
     private JooqMapper() {
