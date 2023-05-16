@@ -5,6 +5,7 @@ import org.linkParser.result.StackOverflowParserResult;
 
 public class StackOverflowParser implements Parser {
     private final Parser nextParser;
+    private static final int idQuestionIndex = 4;
 
     public StackOverflowParser(Parser nextParser) {
         this.nextParser = nextParser;
@@ -14,7 +15,6 @@ public class StackOverflowParser implements Parser {
     public ParserResult parse(String link) {
         if (checkLinkStackOverflow(link)) {
             String[] array = link.split("/");
-            int idQuestionIndex = 4;
             String idQuestion = array[idQuestionIndex];
             return new StackOverflowParserResult(idQuestion);
         } else if (nextParser != null) {
