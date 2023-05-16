@@ -10,9 +10,13 @@ import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 @Component
 public class UntrackCommand implements ICommand {
+    public static final String ERROR_MESSAGE = "Данная ссылка и так не отслеживается";
+    public static final String ERROR_REQUEST_MESSAGE =
+        "Ссылка не удалена из списка отслеживаемых ссылок, введите ее сразу после команды /untrack";
     @Autowired
     private final ScrapperClient scrapperClient;
-    private final String SUCCESSFUL_MESSAGE = "Вы успешно отписались от ссылки, теперь вы не будете получать уведомления об изменениях";
+    private final String SUCCESSFUL_MESSAGE =
+        "Вы успешно отписались от ссылки, теперь вы не будете получать уведомления об изменениях";
 
     public UntrackCommand(ScrapperClient scrapperClient) {
         this.scrapperClient = scrapperClient;
@@ -22,10 +26,6 @@ public class UntrackCommand implements ICommand {
     public String command() {
         return "/untrack";
     }
-
-    public static final String ERROR_MESSAGE = "Данная ссылка и так не отслеживается";
-    public static final String ERROR_REQUEST_MESSAGE = "Ссылка не удалена из списка отслеживаемых ссылок, введите ее сразу после команды /untrack";
-
 
     @Override
     public String description() {
@@ -48,20 +48,20 @@ public class UntrackCommand implements ICommand {
                     return new SendMessage(chatId, SUCCESSFUL_MESSAGE);
                 }
 
-
             }
             return new SendMessage(chatId, ERROR_MESSAGE);
-        }}
-
-        private String[] splitMessageIntoWords (String message){
-            if (message == null) {
-                return new String[0];
-            }
-            String[] words = message.split(" ", 2);
-            if (words.length > 1) {
-                return words;
-            } else {
-                return new String[]{words[0], null};
-            }
         }
     }
+
+    private String[] splitMessageIntoWords(String message) {
+        if (message == null) {
+            return new String[0];
+        }
+        String[] words = message.split(" ", 2);
+        if (words.length > 1) {
+            return words;
+        } else {
+            return new String[] {words[0], null};
+        }
+    }
+}

@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service.jooq;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
@@ -10,21 +12,18 @@ import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.mappers.JooqMapper;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
-
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     @Autowired
-    private CheckUpdater checkUpdater;
-    @Autowired
     JooqLinkRepository jooqLinkRepository;
+    @Autowired
+    private CheckUpdater checkUpdater;
+
     @Override
     public LinkResponse add(long tgChatId, String url) {
         int count = checkUpdater.fillCount(url);
         long id = jooqLinkRepository.add(tgChatId, url, count);
-        return new LinkResponse(id, null, url, OffsetDateTime.now(),count);
+        return new LinkResponse(id, null, url, OffsetDateTime.now(), count);
     }
 
     @Override
@@ -52,8 +51,9 @@ public class JooqLinkService implements LinkService {
         List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();//.getAllUncheckedLinks();
         return JooqMapper.mapList(collection);
     }
+
     public void removeAll() {
-       jooqLinkRepository.removeAllLinks();
+        jooqLinkRepository.removeAllLinks();
         jooqLinkRepository.removeAllChatLink();
     }
 }

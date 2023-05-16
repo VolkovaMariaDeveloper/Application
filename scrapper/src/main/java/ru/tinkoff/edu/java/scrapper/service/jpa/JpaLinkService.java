@@ -1,5 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +18,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.mappers.JpaMapper;
-
-import java.time.OffsetDateTime;
-import java.util.*;
-
 
 @RequiredArgsConstructor
 public class JpaLinkService implements LinkService {
@@ -74,7 +75,6 @@ public class JpaLinkService implements LinkService {
         jpaLinkRepository.saveAndFlush(link);
         return JpaMapper.map(link);
     }
-
 
     @Transactional(readOnly = true)
     @Override

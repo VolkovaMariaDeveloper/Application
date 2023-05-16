@@ -28,8 +28,8 @@ public class RabbitMQConfiguration {
     @Bean
     public Queue queue() {
         return QueueBuilder.durable(queueName)
-                .withArgument(DEAD_LETTER_EX, queueName + DLQ)
-                .build();
+            .withArgument(DEAD_LETTER_EX, queueName + DLQ)
+            .build();
     }
 
     @Bean

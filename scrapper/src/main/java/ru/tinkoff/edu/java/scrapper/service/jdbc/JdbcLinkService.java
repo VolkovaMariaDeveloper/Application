@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
@@ -8,16 +10,12 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
     @Autowired
     private JdbcLinkRepository linkRepository;
     @Autowired
     private CheckUpdater checkUpdater;
-
 
     @Override
     public LinkResponse add(long tgChatId, String url) {
@@ -53,6 +51,6 @@ public class JdbcLinkService implements LinkService {
     }
 
     public void removeAll() {
-         linkRepository.removeAll();
+        linkRepository.removeAll();
     }
 }

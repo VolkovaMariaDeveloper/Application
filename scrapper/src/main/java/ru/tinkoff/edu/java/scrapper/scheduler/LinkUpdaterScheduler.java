@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.scheduler;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,9 +25,6 @@ import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 import ru.tinkoff.edu.java.scrapper.service.sender.UpdateMessageSender;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Log4j2
 @Component
 @EnableScheduling
@@ -43,15 +42,13 @@ public class LinkUpdaterScheduler {
     @Autowired
     private final StackOverflowClient stackOverflowClient;
 
-
     @Autowired
     private final UpdateMessageSender updateMessageSender;
-    private List<Long> tgChatIds;
     private final String BRANCH_ADDED = "Была добавлена новая ветка";
     private final String BRANCH_REMOVED = "Количество веток уменьшилось";
-
     private final String ANSWER_ADDED = "Появился новый ответ";
     private final String description = "Ссылка %s обновилась: %s";
+    private List<Long> tgChatIds;
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
@@ -67,12 +64,24 @@ public class LinkUpdaterScheduler {
                 int countBranches = gitHubClient.fetchRepository(user, repo).size();
                 if (countBranches > link.count()) {
                     tgChatIds = tgChatService.getAllChatByLink(url);
-                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_ADDED),tgChatIds,countBranches));
+                    listUpdater.add(new LinkUpdateRequest(
+                        link.id(),
+                        url,
+                        String.format(description, url, BRANCH_ADDED),
+                        tgChatIds,
+                        countBranches
+                    ));
                     log.info("Link {} has a new update", url);
                 }
                 if (countBranches < link.count()) {
                     tgChatIds = tgChatService.getAllChatByLink(url);
-                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, BRANCH_REMOVED),tgChatIds,countBranches));
+                    listUpdater.add(new LinkUpdateRequest(
+                        link.id(),
+                        url,
+                        String.format(description, url, BRANCH_REMOVED),
+                        tgChatIds,
+                        countBranches
+                    ));
                     log.info("Link {} has a new update", url);
                 }
 
@@ -81,19 +90,26 @@ public class LinkUpdaterScheduler {
                 long id = Long.parseLong(questionId);
                 StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
                 int countAnswers = list[0].answer_count();
-                if (countAnswers > link.count()){
+                if (countAnswers > link.count()) {
                     tgChatIds = tgChatService.getAllChatByLink(url);
-                    listUpdater.add(new LinkUpdateRequest(link.id(), url, String.format(description, url, ANSWER_ADDED),tgChatIds,countAnswers));
+                    listUpdater.add(new LinkUpdateRequest(
+                        link.id(),
+                        url,
+                        String.format(description, url, ANSWER_ADDED),
+                        tgChatIds,
+                        countAnswers
+                    ));
                 }
 
-            } else
+            } else {
                 log.warn("Link {} is not supported", url);
+            }
         }
         for (LinkUpdateRequest link : listUpdater) {
             log.info("Link {} has a new update", link.url());
             updateMessageSender.send(link);
             log.info("Link {} has a new update, we inform the following chats: {} ", link.url(), tgChatIds);
-            linkUpdater.update(link.count(),link.url());
+            linkUpdater.update(link.count(), link.url());
         }
     }
 }

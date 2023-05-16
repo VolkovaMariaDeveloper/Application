@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
-
 @RestController
 public class TgChatApiController {
     @Autowired
     private TgChatService tgChatService;
+
     @PostMapping("/tg-chat/{id}")
     public ResponseEntity<Void> tgChatIdAdd(@PathVariable Long id) {
         tgChatService.register(id);

@@ -14,7 +14,7 @@ import ru.tinkoff.edu.java.bot.service.update.ReceiverUpdates;
 public class HttpSenderConfiguration {
 
     @Bean
-    public ReceiverUpdates receiveUpdates(TBot bot){
+    public ReceiverUpdates receiveUpdates(TBot bot) {
         return new HttpReceiveUpdates(bot);
     }
 }

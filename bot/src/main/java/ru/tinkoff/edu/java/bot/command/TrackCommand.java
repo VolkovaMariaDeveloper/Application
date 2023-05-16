@@ -10,7 +10,11 @@ import ru.tinkoff.edu.java.bot.dto.ListLinkResponse;
 
 @Component
 public class TrackCommand implements ICommand {
-    private final String SUCCESSFUL_MESSAGE = "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
+    public static final String ERROR_MESSAGE =
+        "Ссылка не добавлена в список отслеживаемых ссылок, введите ее сразу после команды /track";
+    public static final String EXISTING_LINK_MESSAGE = "У Вас проблемы с памятью, ссылка %s и так уже отслеживается!";
+    private final String SUCCESSFUL_MESSAGE =
+        "Вы успешно подписались на ссылку %s, теперь вы будете получать уведомления об изменениях";
     @Autowired
     private final ScrapperClient scrapperClient;
 
@@ -22,9 +26,6 @@ public class TrackCommand implements ICommand {
     public String command() {
         return "/track";
     }
-
-    public static final String ERROR_MESSAGE = "Ссылка не добавлена в список отслеживаемых ссылок, введите ее сразу после команды /track";
-    public static final String EXISTING_LINK_MESSAGE = "У Вас проблемы с памятью, ссылка %s и так уже отслеживается!";
 
     @Override
     public String description() {
@@ -59,7 +60,7 @@ public class TrackCommand implements ICommand {
         if (words.length > 1) {
             return words;
         } else {
-            return new String[]{words[0], null};
+            return new String[] {words[0], null};
         }
     }
     //добавить проверку на

@@ -10,6 +10,7 @@ import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 public class JpaLinkUpdater implements LinkUpdater {
     @Autowired
     private JpaLinkRepository jpaLinkRepository;
+
     @Override
     public void update(int count, String url) {
         Links link = jpaLinkRepository.findByUrl(url);

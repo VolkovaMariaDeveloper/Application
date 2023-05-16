@@ -34,7 +34,7 @@ spring:
     password: guest
 
   datasource:
-    url:  jdbc:postgresql://localhost:5432/scrapper
+    url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver

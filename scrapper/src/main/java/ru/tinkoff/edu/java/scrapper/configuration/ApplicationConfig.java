@@ -14,6 +14,6 @@ public record ApplicationConfig(@NotNull String test,
                                 int checkPeriodHours,
                                 String exchangeName,
                                 String queueName,
-                                boolean useQueue ) {
+                                boolean useQueue) {
 
 }

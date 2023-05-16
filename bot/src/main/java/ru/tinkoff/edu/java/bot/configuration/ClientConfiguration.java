@@ -11,7 +11,7 @@ public class ClientConfiguration {
     @Bean("scrapperWebClient")
     public WebClient scrapperWebClient(@Value("${scrapper.url}") String scrapperUrl) {
         return WebClient.builder()
-                .baseUrl(scrapperUrl)
-                .build();
+            .baseUrl(scrapperUrl)
+            .build();
     }
 }

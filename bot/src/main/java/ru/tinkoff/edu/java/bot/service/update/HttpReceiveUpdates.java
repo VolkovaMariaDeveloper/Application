@@ -7,6 +7,7 @@ public class HttpReceiveUpdates extends ReceiverUpdates {
     public HttpReceiveUpdates(TBot bot) {
         super(bot);
     }
+
     public void receiver(LinkUpdateRequest update) {
         this.send(update);
     }

@@ -14,17 +14,17 @@ import ru.tinkoff.edu.java.scrapper.service.jooq.JooqTgChatService;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jooq")
 public class JooqAccessConfiguration {
     @Bean("jooqLinkService")
-    public LinkService linkService(){
+    public LinkService linkService() {
         return new JooqLinkService();
     }
 
     @Bean("jooqLinkUpdater")
-    public LinkUpdater linkUpdater(){
+    public LinkUpdater linkUpdater() {
         return new JooqLinkUpdater();
     }
 
     @Bean("jooqTgChatService")
-    public TgChatService tgChatService(){
+    public TgChatService tgChatService() {
         return new JooqTgChatService();
     }
 }
