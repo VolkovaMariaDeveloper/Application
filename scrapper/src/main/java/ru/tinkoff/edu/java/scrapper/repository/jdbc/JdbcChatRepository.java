@@ -1,12 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Log4j2
 //@Repository("chatRepository")
@@ -56,7 +55,7 @@ public class JdbcChatRepository {
         );
     }
 
-    public List<Long> getAllChats() {// найти все чаты
+    public List<Long> getAllChats() {
         String sql = """
             select id from chat
 
