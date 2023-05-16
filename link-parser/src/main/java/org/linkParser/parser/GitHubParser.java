@@ -16,10 +16,14 @@ public class GitHubParser implements Parser {
     public ParserResult parse(String link) {
         if (checkLinkGitHub(link)) {
             String[] array = link.split("/");
-            if(array.length>=5){
-            Pair<String, String> pairUserRepository = new Pair<>(array[3], array[4]);
+            int allowableLength = 5;
+            int userIndex = 3;
+            int repoIndex = 4;
+            if (array.length >= allowableLength) {
+                Pair<String, String> pairUserRepository = new Pair<>(array[userIndex], array[repoIndex]);
 
-            return new GitHubParserResult(pairUserRepository);}
+                return new GitHubParserResult(pairUserRepository);
+            }
         } else if (nextParser != null) {
             return nextParser.parse(link);
         }
