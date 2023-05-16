@@ -1,12 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Objects;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -16,6 +9,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @Primary
@@ -26,6 +26,10 @@ public class JdbcLinkRepository {
     private final TransactionTemplate transactionTemplate;
     private final ApplicationConfig config;
     private final PlatformTransactionManager transactionManager;
+    private static final String ID = "id";
+    private static final String URL = "url";
+    private static final String COUNT = "count";
+    private static final String LAST_CHECK_TIME = "last_check_time";
 
     JdbcLinkRepository(
         JdbcTemplate jdbcTemplate,
@@ -49,7 +53,7 @@ public class JdbcLinkRepository {
                 on conflict (url) do nothing
                 returning id
                 """;
-            String chat_linkSql = """
+            String chatLinkSql = """
                 insert into chat_link(chat_id, link_id)
                 values(?,?)
                 on conflict do nothing
@@ -63,14 +67,14 @@ public class JdbcLinkRepository {
                 id = tempId.get(0);
             }
             //обновление в связывающей таблице
-            jdbcTemplate.update(chat_linkSql, tgChatId, id);
+            jdbcTemplate.update(chatLinkSql, tgChatId, id);
             return id;
         });
         return Objects.requireNonNull(insertId);
     }
 
     public long remove(long tgChatId, String link) {
-        String chat_linkSql = """
+        String chatLinkSql = """
             delete from chat_link using links
             where id = link_id and chat_id = ? and url = ?
             returning id
@@ -81,7 +85,7 @@ public class JdbcLinkRepository {
             where id = ?
             """;
 
-        long id = jdbcTemplate.queryForObject(chat_linkSql, Long.class, tgChatId, link);
+        long id = jdbcTemplate.queryForObject(chatLinkSql, Long.class, tgChatId, link);
         if (getFollowers(id) == 0) {
             jdbcTemplate.update(linksSql, id);
         }
@@ -90,12 +94,12 @@ public class JdbcLinkRepository {
     }
 
     public long getFollowers(long linkId) {
-        String chat_linkSql = """
+        String chatLinkSql = """
             select count (*)
             from chat_link
             where link_id = ?
             """;
-        long countFollowers = jdbcTemplate.queryForObject(chat_linkSql, Long.class, linkId);
+        long countFollowers = jdbcTemplate.queryForObject(chatLinkSql, Long.class, linkId);
         return Objects.requireNonNull(countFollowers);
 
     }
@@ -111,11 +115,11 @@ public class JdbcLinkRepository {
         return jdbcTemplate.query(
             linksSql,
             (rs, rn) -> {
-                long id = rs.getLong("id");
-                String link = rs.getString("url");
-                OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
-                int count = rs.getInt("count");
-                return new LinkResponse(id, null, link, lastCheck_Time, count);
+                long id = rs.getLong(ID);
+                String link = rs.getString(URL);
+                OffsetDateTime lastCheckTime = getOffsetDateTime(rs, LAST_CHECK_TIME);
+                int count = rs.getInt(COUNT);
+                return new LinkResponse(id, null, link, lastCheckTime, count);
 
             },
             tgChatId
@@ -131,11 +135,11 @@ public class JdbcLinkRepository {
         return jdbcTemplate.query(
             linksSql,
             (rs, rn) -> {
-                long id = rs.getLong("id");
-                String link = rs.getString("url");
-                OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
-                int count = rs.getInt("count");
-                return new LinkResponse(id, null, link, lastCheck_Time, count);
+                long id = rs.getLong(ID);
+                String link = rs.getString(URL);
+                OffsetDateTime lastCheckTime = getOffsetDateTime(rs, LAST_CHECK_TIME);
+                int count = rs.getInt(COUNT);
+                return new LinkResponse(id, null, link, lastCheckTime, count);
 
             }
         );
@@ -152,11 +156,11 @@ public class JdbcLinkRepository {
         return jdbcTemplate.query(
             linksSql,
             (rs, rn) -> {
-                long id = rs.getLong("id");
-                String link = rs.getString("url");
-                OffsetDateTime lastCheck_Time = getOffsetDateTime(rs, "last_check_time");
-                int count = rs.getInt("count");
-                return new LinkResponse(id, null, link, lastCheck_Time, count);
+                long id = rs.getLong(ID);
+                String link = rs.getString(URL);
+                OffsetDateTime lastCheckTime = getOffsetDateTime(rs, LAST_CHECK_TIME);
+                int count = rs.getInt(COUNT);
+                return new LinkResponse(id, null, link, lastCheckTime, count);
 
             },
             checkPeriod
@@ -169,11 +173,11 @@ public class JdbcLinkRepository {
     }
 
     public void updateLinks(int count, String link) {
-        String chat_linkSql = """
+        String chatLinkSql = """
             update links set count = ?, last_check_time = now()
             where url = ?
             """;
-        jdbcTemplate.update(chat_linkSql, count, link);
+        jdbcTemplate.update(chatLinkSql, count, link);
 
     }
 
@@ -181,11 +185,11 @@ public class JdbcLinkRepository {
         String linksSql = """
             delete from links
             """;
-        String chatLinksSql = """
+        String chatLinkSql = """
             delete from chat_link
             """;
         jdbcTemplate.update(linksSql);
-        jdbcTemplate.update(chatLinksSql);
+        jdbcTemplate.update(chatLinkSql);
     }
 
 }

@@ -15,7 +15,7 @@ public class HttpSenderConfiguration {
     BotClient botClient;
 
     @Bean
-    public UpdateMessageSender updateMessageSender(){
+    public UpdateMessageSender updateMessageSender() {
         return new HttpUpdateMessageSender(botClient);
     }
 }

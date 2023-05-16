@@ -44,10 +44,11 @@ public class LinkUpdaterScheduler {
 
     @Autowired
     private final UpdateMessageSender updateMessageSender;
-    private final String BRANCH_ADDED = "Была добавлена новая ветка";
-    private final String BRANCH_REMOVED = "Количество веток уменьшилось";
-    private final String ANSWER_ADDED = "Появился новый ответ";
-    private final String description = "Ссылка %s обновилась: %s";
+    private static final String BRANCH_ADDED = "Была добавлена новая ветка";
+    private static final String BRANCH_REMOVED = "Количество веток уменьшилось";
+    private static final String ANSWER_ADDED = "Появился новый ответ";
+    private static final String DESCRIPTION = "Ссылка %s обновилась: %s";
+    private static final String LOG_MESSAGE = "Link {} has a new update";
     private List<Long> tgChatIds;
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
@@ -67,22 +68,22 @@ public class LinkUpdaterScheduler {
                     listUpdater.add(new LinkUpdateRequest(
                         link.id(),
                         url,
-                        String.format(description, url, BRANCH_ADDED),
+                        String.format(DESCRIPTION, url, BRANCH_ADDED),
                         tgChatIds,
                         countBranches
                     ));
-                    log.info("Link {} has a new update", url);
+                    log.info(LOG_MESSAGE, url);
                 }
                 if (countBranches < link.count()) {
                     tgChatIds = tgChatService.getAllChatByLink(url);
                     listUpdater.add(new LinkUpdateRequest(
                         link.id(),
                         url,
-                        String.format(description, url, BRANCH_REMOVED),
+                        String.format(DESCRIPTION, url, BRANCH_REMOVED),
                         tgChatIds,
                         countBranches
                     ));
-                    log.info("Link {} has a new update", url);
+                    log.info(LOG_MESSAGE, url);
                 }
 
             } else if (result instanceof StackOverflowParserResult) {
@@ -95,7 +96,7 @@ public class LinkUpdaterScheduler {
                     listUpdater.add(new LinkUpdateRequest(
                         link.id(),
                         url,
-                        String.format(description, url, ANSWER_ADDED),
+                        String.format(DESCRIPTION, url, ANSWER_ADDED),
                         tgChatIds,
                         countAnswers
                     ));
@@ -106,7 +107,7 @@ public class LinkUpdaterScheduler {
             }
         }
         for (LinkUpdateRequest link : listUpdater) {
-            log.info("Link {} has a new update", link.url());
+            log.info(LOG_MESSAGE, link.url());
             updateMessageSender.send(link);
             log.info("Link {} has a new update, we inform the following chats: {} ", link.url(), tgChatIds);
             linkUpdater.update(link.count(), link.url());

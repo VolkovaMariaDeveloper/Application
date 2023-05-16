@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -7,9 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("GitHubService")
 //@RequiredArgsConstructor

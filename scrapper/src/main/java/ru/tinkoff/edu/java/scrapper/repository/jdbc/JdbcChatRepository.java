@@ -1,11 +1,12 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Log4j2
 //@Repository("chatRepository")
@@ -42,7 +43,7 @@ public class JdbcChatRepository {
         jdbcTemplate.update(linksSql);
     }
 
-    public List<Long> findAllByLink(String link) {// найти все чаты, которые подписаны на ссылку? Или просто все чаты бота
+    public List<Long> findAllByLink(String link) {
         String sql = """
             select chat_id from chat_link
             join links on id = link_id
@@ -54,7 +55,6 @@ public class JdbcChatRepository {
             link
         );
     }
-
     public List<Long> getAllChats() {// найти все чаты
         String sql = """
             select id from chat

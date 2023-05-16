@@ -3,7 +3,12 @@ package ru.tinkoff.edu.java.scrapper.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
@@ -15,13 +20,13 @@ import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 public class LinksApiController {
     @Autowired
-    private LinkService LinkService;
+    private LinkService linkService;
 
     @GetMapping("/links")
     public ResponseEntity<ListLinksResponse> linksGetAll(
         @RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId
     ) {
-        ListLinksResponse linkResponse = LinkService.findAllByChatId(tgChatId);
+        ListLinksResponse linkResponse = linkService.findAllByChatId(tgChatId);
         return ResponseEntity.ok(linkResponse);
     }
 
@@ -32,7 +37,7 @@ public class LinksApiController {
     ) {
         log.info("Adding link for chat: {}", tgChatId);
         log.info("Request: {}", addLinkRequest);
-        LinkResponse linkResponse = LinkService.add(tgChatId, addLinkRequest.link());
+        LinkResponse linkResponse = linkService.add(tgChatId, addLinkRequest.link());
         return ResponseEntity.ok(linkResponse);
     }
 
@@ -42,7 +47,7 @@ public class LinksApiController {
         @RequestHeader(value = "Tg-Chat-Id", required = true) Long tgChatId,
         @RequestBody RemoveLinkRequest removeLinkRequest
     ) {
-        LinkResponse linkResponse = LinkService.remove(tgChatId, removeLinkRequest.link());
+        LinkResponse linkResponse = linkService.remove(tgChatId, removeLinkRequest.link());
         return ResponseEntity.ok(linkResponse);
     }
 

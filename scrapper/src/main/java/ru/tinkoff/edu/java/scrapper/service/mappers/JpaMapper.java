@@ -7,7 +7,10 @@ import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.entity.Links;
 
-public class JpaMapper {
+public final class JpaMapper {
+    private JpaMapper() {
+    }
+
     public static LinkResponse map(Links link) {
         long id = link.getId();
         String url = link.getUrl();

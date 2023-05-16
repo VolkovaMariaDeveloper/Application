@@ -1,7 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.service.jooq;
 
-import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.scrapper.dto.response.JooqLinkResponse;
@@ -11,6 +9,9 @@ import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.CheckUpdater;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 import ru.tinkoff.edu.java.scrapper.service.mappers.JooqMapper;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
@@ -48,7 +49,7 @@ public class JooqLinkService implements LinkService {
 
     @Override
     public ListLinksResponse getAllUncheckedLinks() {
-        List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();//.getAllUncheckedLinks();
+        List<JooqLinkResponse> collection = jooqLinkRepository.getAllUncheckedLinks();
         return JooqMapper.mapList(collection);
     }
 
