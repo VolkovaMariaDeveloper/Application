@@ -5,6 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 public record StackOverflowResponse(StackOverflowResponseItem[] items) {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public record StackOverflowResponseItem(Integer answerCount) {
+    public record StackOverflowResponseItem(Integer answer_count) {
     }
 }
