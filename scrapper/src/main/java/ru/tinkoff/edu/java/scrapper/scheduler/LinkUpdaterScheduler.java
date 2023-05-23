@@ -90,7 +90,7 @@ public class LinkUpdaterScheduler {
                 String questionId = ((StackOverflowParserResult) result).idQuestion;
                 long id = Long.parseLong(questionId);
                 StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-                int countAnswers = list[0].answerCount();
+                int countAnswers = list[0].answer_count();
                 if (countAnswers > link.count()) {
                     tgChatIds = tgChatService.getAllChatByLink(url);
                     listUpdater.add(new LinkUpdateRequest(

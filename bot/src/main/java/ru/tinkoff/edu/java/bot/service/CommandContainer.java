@@ -23,7 +23,6 @@ import static ru.tinkoff.edu.java.bot.enums.CommandName.UNTRACK;
 @Component
 //@RequiredArgsConstructor
 public class CommandContainer implements ICommandContainer {
-
     private final ICommand unknownCommand;
     public HashMap<String, ICommand> commandMap;
     public List<BotCommand> listCommand = new ArrayList<>();

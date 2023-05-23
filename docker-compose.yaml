@@ -56,11 +56,40 @@ services:
       - 5672:5672
       - 15672:15672
 
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - metrics
+    ports:
+      - "9090:9090"
+
+  grafana2:
+    image: grafana/grafana-oss
+    volumes:
+      - grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - metrics
+    ports:
+      - "3000:3000"
 
 networks:
   backend:
     name: backend
     external: false
+  metrics:
 
 volumes:
   postgres_data:
@@ -71,5 +100,7 @@ volumes:
     name: migrations_data
   rabbitmq_data:
   rabbitmq_logs:
+  grafana:
+  prometheus:
 #    external: false
 #    name: rabbitmq_data

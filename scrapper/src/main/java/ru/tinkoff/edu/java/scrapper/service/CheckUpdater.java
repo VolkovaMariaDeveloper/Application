@@ -31,7 +31,7 @@ public class CheckUpdater {
             String questionId = ((StackOverflowParserResult) result).idQuestion;
             long id = Long.parseLong(questionId);
             StackOverflowResponse.StackOverflowResponseItem[] list = stackOverflowClient.fetchQuestion(id).items();
-            return list[0].answerCount();
+            return list[0].answer_count();
         } else {
             return -1;
         }

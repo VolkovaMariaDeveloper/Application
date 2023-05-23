@@ -6,7 +6,7 @@ app:
   checkPeriodHours: 0
   exchangeName: scrapperExchange
   queueName: scrapperQueue
-  useQueue: true
+  useQueue: false
 
 
 springdoc:
@@ -23,10 +23,12 @@ stackoverflow:
 
 bot:
   base-url: "http://localhost:8081"
+
 spring:
   liquibase:
     changeLog: "classpath: /migrations/master.yaml"
     enabled: false
+
   rabbitmq:
     host: localhost
     port: 5672
@@ -38,6 +40,27 @@ spring:
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
-
+  application:
+    name: scrapper
   main:
     allow-circular-references: true
+
+management:
+  server:
+    port: 8082
+  endpoint:
+    health:
+      show-details: always
+    info:
+    prometheus:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+      path-mapping:
+        prometheus: metrics
+    enabled-by-default: true
+  metrics:
+    tags:
+      application: '${spring.application.name}'

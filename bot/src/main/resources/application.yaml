@@ -2,7 +2,7 @@ app:
   test: 5
   exchangeName: scrapperExchange
   queueName: scrapperQueue
-  useQueue: true
+  useQueue: false
 
 springdoc:
   swagger-ui:
@@ -27,3 +27,25 @@ spring:
     port: 5672
     username: guest
     password: guest
+  application:
+    name: bot
+
+management:
+  server:
+    port: 8083
+  endpoint:
+    health:
+      show-details: always
+    info:
+    prometheus:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+      path-mapping:
+        prometheus: metrics
+    enabled-by-default: true
+  metrics:
+    tags:
+      application: '${spring.application.name}'

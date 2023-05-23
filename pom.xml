@@ -23,6 +23,8 @@
         <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+        <micrometer-registry-prometheus.version>1.10.5</micrometer-registry-prometheus.version>
+        <micrometer-tracing-bridge-brave.version>1.0.4</micrometer-tracing-bridge-brave.version>
     </properties>
 
 
@@ -77,7 +79,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.1.0</version>
+            <version>24.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -95,6 +97,23 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer-registry-prometheus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+            <version>${micrometer-tracing-bridge-brave.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <pluginManagement>
