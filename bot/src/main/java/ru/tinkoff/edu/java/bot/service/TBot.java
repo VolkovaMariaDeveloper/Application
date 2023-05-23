@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
+import ru.tinkoff.edu.java.bot.metrics.MetricsOfProcessedMessages;
 
 @Component
 public class TBot extends TelegramLongPollingBot implements IBot {
@@ -47,6 +48,7 @@ public class TBot extends TelegramLongPollingBot implements IBot {
         if (update.message() != null) {
             String message = update.message().text();
             String[] words = splitMessageIntoWords(message);
+            MetricsOfProcessedMessages.incrementMessages();
             bot.execute(commandContainer.retrieveCommand(words[0]).handle(update));
         }
     }

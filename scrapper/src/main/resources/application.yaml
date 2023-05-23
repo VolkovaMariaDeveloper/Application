@@ -6,7 +6,7 @@ app:
   checkPeriodHours: 0
   exchangeName: scrapperExchange
   queueName: scrapperQueue
-  useQueue: true
+  useQueue: false
 
 
 springdoc:

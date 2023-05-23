@@ -2,7 +2,7 @@ app:
   test: 5
   exchangeName: scrapperExchange
   queueName: scrapperQueue
-  useQueue: true
+  useQueue: false
 
 springdoc:
   swagger-ui:

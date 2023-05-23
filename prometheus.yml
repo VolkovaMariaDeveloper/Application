@@ -1,5 +1,5 @@
 scrape_configs:
-  - job_name: scrapper_metrics
+  - job_name: metrics
     metrics_path: /metrics
     scrape_interval: 5s
     static_configs:

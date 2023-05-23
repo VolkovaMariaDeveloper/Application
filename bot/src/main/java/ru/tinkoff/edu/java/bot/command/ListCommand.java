@@ -39,7 +39,7 @@ public class ListCommand implements ICommand {
 
         //TODO вернуть список строк
 //        if (trackedLinks.links().isEmpty()) {
-        if (trackedLinks == null) {
+        if (trackedLinks == null || trackedLinks.links().isEmpty() ) {
             return new SendMessage(chatId, ERROR_MESSAGE);
         } else {
             StringBuilder linksList = new StringBuilder(SUCCESSFUL_MESSAGE);
